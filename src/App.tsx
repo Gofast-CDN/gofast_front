@@ -2,6 +2,7 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import { Button } from "./components/ui/button";
+import { config } from "./lib/config";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -43,6 +44,7 @@ function App() {
         </div>
         <p className="text-center text-gray-500 mt-8">
           Click on the Vite and React logos to learn more
+          config.gofastApi.baseUrl: {config.gofastApi.baseUrl}
         </p>
       </div>
     </div>
