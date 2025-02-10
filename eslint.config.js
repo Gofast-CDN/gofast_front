@@ -6,7 +6,12 @@ import tseslint from "typescript-eslint";
 import prettier from "eslint-plugin-prettier";
 
 export default tseslint.config(
-  { ignores: ["dist"] },
+  { 
+    ignores: [
+      "dist",
+      "**/components/ui/**"
+    ] 
+  },
   {
     extends: [
       js.configs.recommended,
