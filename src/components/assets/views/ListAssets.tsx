@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -6,7 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import {
   Download,
   FileIcon,
@@ -21,14 +21,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
-import { Asset, AssetAction } from "@/types/asset";
+import type { Asset, AssetAction } from "@/types/asset";
 
 interface ListAssetsProps {
   assets: Asset[];
   handleAction: (action: AssetAction, fileId: string) => void;
+  setSelectedAsset: (asset: Asset) => void;
 }
 
-const ListAssets = ({ assets, handleAction }: ListAssetsProps) => {
+const ListAssets = ({
+  assets,
+  handleAction,
+  setSelectedAsset,
+}: ListAssetsProps) => {
   return (
     <div className="rounded-md border">
       <Table>
@@ -44,7 +49,11 @@ const ListAssets = ({ assets, handleAction }: ListAssetsProps) => {
         </TableHeader>
         <TableBody>
           {assets.map((asset) => (
-            <TableRow key={asset.id}>
+            <TableRow
+              key={asset.id}
+              className="cursor-pointer"
+              onClick={() => setSelectedAsset(asset)}
+            >
               <TableCell>
                 <div className="flex items-center gap-4">
                   <img
@@ -91,20 +100,29 @@ const ListAssets = ({ assets, handleAction }: ListAssetsProps) => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-40">
                     <DropdownMenuItem
-                      onClick={() => handleAction("share", asset.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAction("share", asset.id);
+                      }}
                     >
                       <Share2 className="mr-2 h-4 w-4" />
                       Share
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => handleAction("download", asset.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAction("download", asset.id);
+                      }}
                     >
                       <Download className="mr-2 h-4 w-4" />
                       Download
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
-                      onClick={() => handleAction("delete", asset.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAction("delete", asset.id);
+                      }}
                       className="text-red-600 focus:text-red-600"
                     >
                       <Trash2 className="mr-2 h-4 w-4" />

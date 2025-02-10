@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ListAssets from "@/components/assets/views/ListAssets";
 import GridAssets from "@/components/assets/views/GridAssets";
+import AssetDetailsDialog from "@/components/assets/AssetDetailsDialog";
 
 const assets: Asset[] = [
   {
@@ -46,6 +47,7 @@ const assets: Asset[] = [
 ];
 
 export default function MySpace() {
+  const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
@@ -64,52 +66,66 @@ export default function MySpace() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">My assets</h1>
-        <div className="flex items-center gap-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2">
-                {viewMode === "grid" ? (
-                  <Grid className="h-4 w-4" />
-                ) : (
-                  <LayoutList className="h-4 w-4" />
-                )}
-                <span>{viewMode === "grid" ? "Grid view" : "List view"}</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem onClick={() => setViewMode("list")}>
-                <LayoutList className="mr-2 h-4 w-4" />
-                List view
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setViewMode("grid")}>
-                <Grid className="mr-2 h-4 w-4" />
-                Grid view
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+    <>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">My assets</h1>
+          <div className="flex items-center gap-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2">
+                  {viewMode === "grid" ? (
+                    <Grid className="h-4 w-4" />
+                  ) : (
+                    <LayoutList className="h-4 w-4" />
+                  )}
+                  <span>{viewMode === "grid" ? "Grid view" : "List view"}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuItem onClick={() => setViewMode("list")}>
+                  <LayoutList className="mr-2 h-4 w-4" />
+                  List view
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setViewMode("grid")}>
+                  <Grid className="mr-2 h-4 w-4" />
+                  Grid view
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>
 
-      <div className="flex items-center space-x-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search assets..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-8"
+        <div className="flex items-center space-x-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search assets..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-8"
+            />
+          </div>
+        </div>
+
+        {viewMode === "list" ? (
+          <ListAssets
+            assets={assets}
+            handleAction={handleAction}
+            setSelectedAsset={setSelectedAsset}
           />
-        </div>
+        ) : (
+          <GridAssets
+            assets={assets}
+            handleAction={handleAction}
+            setSelectedAsset={setSelectedAsset}
+          />
+        )}
       </div>
-
-      {viewMode === "list" ? (
-        <ListAssets assets={assets} handleAction={handleAction} />
-      ) : (
-        <GridAssets assets={assets} handleAction={handleAction} />
-      )}
-    </div>
+      <AssetDetailsDialog
+        selectedAsset={selectedAsset}
+        onClose={() => setSelectedAsset(null)}
+      />
+    </>
   );
 }

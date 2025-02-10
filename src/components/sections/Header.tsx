@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { useLocation } from "react-router-dom";
-import { items } from "@/components/nav/appSidebar";
+import { items } from "@/components/nav/AppSidebar";
 
 export function Header() {
   const location = useLocation();

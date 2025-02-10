@@ -18,15 +18,21 @@ import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 interface GridAssetsProps {
   assets: Asset[];
   handleAction: (action: AssetAction, fileId: string) => void;
+  setSelectedAsset: (asset: Asset) => void;
 }
 
-export default function GridAssets({ assets, handleAction }: GridAssetsProps) {
+export default function GridAssets({
+  assets,
+  handleAction,
+  setSelectedAsset,
+}: GridAssetsProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4">
       {assets.map((asset) => (
         <div
           key={asset.id}
-          className="group relative rounded-lg border p-4 hover:border-accent transition-colors"
+          className="cursor-pointer group relative rounded-lg border p-4 hover:border-accent transition-colors"
+          onClick={() => setSelectedAsset(asset)}
         >
           <div className="aspect-square mb-4">
             <img
