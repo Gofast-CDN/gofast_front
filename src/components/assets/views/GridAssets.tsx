@@ -37,7 +37,7 @@ export default function GridAssets({
 
   const handleAssetClick = (asset: Asset) => {
     if (asset.assetType === "folder") {
-      void navigate(`/dashboard/folders/${asset.id}`);
+      void navigate(`/dashboard/my-space/${asset.id}`);
       return;
     }
     setSelectedAsset(asset);
