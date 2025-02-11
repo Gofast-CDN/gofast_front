@@ -12,8 +12,20 @@ export function Header() {
       ? location.pathname.slice(0, -1)
       : location.pathname;
 
-    const currentItem = items.find((item) => item.url === currentPath);
-    return currentItem?.title || "Not found";
+    // Find the matching route with the longest URL (most specific match)
+    const currentItem = items
+      .filter(
+        (item) =>
+          currentPath === item.url || currentPath.startsWith(`${item.url}/`)
+      )
+      .sort((a, b) => b.url.length - a.url.length)[0];
+
+    // Special case: don't return Home for nested paths
+    if (currentItem?.url === "/dashboard" && currentPath !== "/dashboard") {
+      return "Not found";
+    }
+
+    return currentItem.title;
   };
 
   return (

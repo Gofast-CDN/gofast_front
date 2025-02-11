@@ -80,7 +80,14 @@ export function AppSidebar() {
     const currentPath = location.pathname.endsWith("/")
       ? location.pathname.slice(0, -1)
       : location.pathname;
-    return currentPath === itemUrl;
+
+    // Special case for root dashboard path
+    if (itemUrl === "/dashboard") {
+      return currentPath === itemUrl;
+    }
+
+    // For other paths, check if current path starts with the menu item URL
+    return currentPath === itemUrl || currentPath.startsWith(`${itemUrl}/`);
   };
 
   return (
