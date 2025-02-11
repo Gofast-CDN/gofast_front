@@ -10,7 +10,7 @@ export default function DashboardRouter() {
       <Route element={<DashboardLayout />}>
         <Route path="/" element={<div>home</div>} />
         <Route path="/my-space" element={<MySpace />} />
-        <Route path="/folders/:id" element={<FolderDetails />} />
+        <Route path="/my-space/:id" element={<FolderDetails />} />
         <Route path="/trash" element={<div>trash</div>} />
         <Route path="/settings" element={<div>settings</div>} />
         <Route path="/*" element={<NotFound />} />

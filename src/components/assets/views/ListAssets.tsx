@@ -44,7 +44,7 @@ const ListAssets = ({
 
   const handleClickedAsset = (asset: Asset) => {
     if (asset.assetType === "folder") {
-      void navigate(`/dashboard/folders/${asset.id}`);
+      void navigate(`/dashboard/my-space/${asset.id}`);
     }
     setSelectedAsset(asset);
   };
