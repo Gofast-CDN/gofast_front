@@ -7,5 +7,6 @@ export interface Asset {
   url?: string;
   thumbnail?: string;
   assetType: string;
+  parentId?: string;
 }
 export type AssetAction = "share" | "download" | "delete";
