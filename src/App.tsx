@@ -2,11 +2,13 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DashboardRouter from "./routing/DashboardRouter";
 
-// Lazy-loaded components
+// Lazy-loaded components for public routes only
 const Home = React.lazy(() => import("./pages/Home"));
 const Login = React.lazy(() => import("./pages/Login"));
 const Register = React.lazy(() => import("./pages/Register"));
-const NotFound = React.lazy(() => import("./pages/NotFound"));
+
+// Non-lazy NotFound since it's used in multiple places
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -15,9 +17,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="*" element={<NotFound />} />
-
         <Route path="/dashboard/*" element={<DashboardRouter />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
