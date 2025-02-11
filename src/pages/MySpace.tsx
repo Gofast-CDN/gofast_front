@@ -13,6 +13,7 @@ import ListAssets from "@/components/assets/views/ListAssets";
 import GridAssets from "@/components/assets/views/GridAssets";
 import AssetDetailsDialog from "@/components/assets/AssetDetailsDialog";
 import AssetsContextMenuAction from "@/components/assets/AssetsContextMenuAction";
+import { CreateFolderModal } from "@/components/assets/CreateFolderModal";
 
 const assets: Asset[] = [
   {
@@ -67,6 +68,8 @@ const VIEW_MODE_KEY = "gofast_view_mode_preference";
 
 export default function MySpace() {
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+  const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
+
   // const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
     const savedMode = localStorage.getItem(VIEW_MODE_KEY);
@@ -76,6 +79,13 @@ export default function MySpace() {
   useEffect(() => {
     localStorage.setItem(VIEW_MODE_KEY, viewMode);
   }, [viewMode]);
+
+  const handleCreateFolder = async (name: string) => {
+    // Here you would normally make an API call to create the folder
+    console.log("Creating folder:", name);
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  };
 
   const handleAction = (action: string, fileId: string) => {
     switch (action) {
@@ -155,10 +165,17 @@ export default function MySpace() {
         </div>
       </ContextMenuTrigger>
 
-      <AssetsContextMenuAction />
+      <AssetsContextMenuAction
+        setIsCreateFolderModalOpen={setIsCreateFolderModalOpen}
+      />
       <AssetDetailsDialog
         selectedAsset={selectedAsset}
         onClose={() => setSelectedAsset(null)}
+      />
+      <CreateFolderModal
+        isOpen={isCreateFolderModalOpen}
+        onClose={() => setIsCreateFolderModalOpen(false)}
+        onSubmit={handleCreateFolder}
       />
     </ContextMenu>
   );
