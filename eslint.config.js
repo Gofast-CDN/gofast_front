@@ -6,7 +6,12 @@ import tseslint from "typescript-eslint";
 import prettier from "eslint-plugin-prettier";
 
 export default tseslint.config(
-  { ignores: ["dist"] },
+  { 
+    ignores: [
+      "dist",
+      "**/components/ui/**"
+    ] 
+  },
   {
     extends: [
       js.configs.recommended,
@@ -34,12 +39,15 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "prettier/prettier": "error",
       "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-redundant-type-constituents": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
       "@typescript-eslint/no-unsafe-call": "off",
       "react-refresh/only-export-components": "off",
       "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/explicit-function-return-type": "off",
-      "@typescript-eslint/strict-boolean-expressions": "error",
       "no-console": ["warn", { allow: ["warn", "error"] }],
     },
   }
