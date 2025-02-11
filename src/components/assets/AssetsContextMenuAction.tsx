@@ -5,10 +5,16 @@ import {
 } from "@/components/ui/context-menu";
 import { FolderPlus, FileUp, FolderUp } from "lucide-react";
 
-export default function AssetsContextMenuAction() {
+interface AssetsContextMenuActionProps {
+  setIsCreateFolderModalOpen: (isOpen: boolean) => void;
+}
+
+export default function AssetsContextMenuAction({
+  setIsCreateFolderModalOpen,
+}: AssetsContextMenuActionProps) {
   return (
     <ContextMenuContent className="w-56">
-      <ContextMenuItem onClick={() => console.log("New folder")}>
+      <ContextMenuItem onClick={() => setIsCreateFolderModalOpen(true)}>
         <FolderPlus className="mr-2 h-4 w-4" />
         New folder
       </ContextMenuItem>
