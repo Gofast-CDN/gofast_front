@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import SharedLink from "../ui/sharedLink";
 
 interface AssetDetailsDialogProps {
-  selectedAsset: Asset;
+  selectedAsset: Asset | null;
   onClose: () => void;
 }
 
