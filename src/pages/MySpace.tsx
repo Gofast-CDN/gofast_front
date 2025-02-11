@@ -1,8 +1,7 @@
 import { Asset } from "@/types/asset";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Grid, LayoutList } from "lucide-react";
-import { useState } from "react";
+import { Grid, LayoutList } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,40 +15,65 @@ import AssetDetailsDialog from "@/components/assets/AssetDetailsDialog";
 const assets: Asset[] = [
   {
     id: "1",
+    name: "Documents",
+    size: "9 KB",
+    owner: "John Doe",
+    uploadedAt: "2024-02-10T14:30:00Z",
+    assetType: "folder",
+  },
+  {
+    id: "2",
+    name: "Images",
+    size: "13 MB",
+    owner: "John Doe",
+    uploadedAt: "2024-02-10T14:30:00Z",
+    assetType: "folder",
+  },
+  {
+    id: "3",
     name: "react-patterns.pdf",
-    type: "application/pdf",
     size: "2.4 MB",
     owner: "John Doe",
     uploadedAt: "2024-02-10T14:30:00Z",
     url: "https://storage.gofast.dev/files/react-patterns.pdf",
     thumbnail: "https://placehold.co/40x40",
+    assetType: "application/pdf",
   },
   {
-    id: "2",
+    id: "4",
     name: "architecture.png",
-    type: "image/png",
     size: "856 KB",
     owner: "John Doe",
     uploadedAt: "2024-02-09T10:15:00Z",
     url: "https://storage.gofast.dev/files/architecture.png",
     thumbnail: "https://placehold.co/40x40",
+    assetType: "image/png",
   },
   {
-    id: "3",
+    id: "5",
     name: "api-doc.md",
-    type: "text/markdown",
     size: "12 KB",
     owner: "John Doe",
     uploadedAt: "2024-02-08T09:20:00Z",
     url: "https://storage.gofast.dev/files/api-doc.md",
     thumbnail: "https://placehold.co/40x40",
+    assetType: "image/png",
   },
 ];
 
+const VIEW_MODE_KEY = "gofast_view_mode_preference";
+
 export default function MySpace() {
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+  // const [searchTerm, setSearchTerm] = useState("");
+  const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
+    const savedMode = localStorage.getItem(VIEW_MODE_KEY);
+    return savedMode === "list" || savedMode === "grid" ? savedMode : "list";
+  });
+
+  useEffect(() => {
+    localStorage.setItem(VIEW_MODE_KEY, viewMode);
+  }, [viewMode]);
 
   const handleAction = (action: string, fileId: string) => {
     switch (action) {
@@ -69,7 +93,9 @@ export default function MySpace() {
     <>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">My assets</h1>
+          <h1 className="text-2xl font-bold">
+            Showing 4 folders and 349 files
+          </h1>
           <div className="flex items-center gap-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -96,7 +122,7 @@ export default function MySpace() {
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
+        {/* <div className="flex items-center space-x-2">
           <div className="relative flex-1">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -106,7 +132,7 @@ export default function MySpace() {
               className="pl-8"
             />
           </div>
-        </div>
+        </div> */}
 
         {viewMode === "list" ? (
           <ListAssets

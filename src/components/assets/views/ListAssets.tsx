@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import {
   Download,
-  FileIcon,
+  FolderIcon,
   MoreHorizontal,
   Share2,
   Trash2,
@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import type { Asset, AssetAction } from "@/types/asset";
+import { useNavigate } from "react-router-dom";
 
 interface ListAssetsProps {
   assets: Asset[];
@@ -34,41 +35,58 @@ const ListAssets = ({
   handleAction,
   setSelectedAsset,
 }: ListAssetsProps) => {
+  const navigate = useNavigate();
+  const sortedAssets = [...assets].sort((a, b) => {
+    if (a.assetType === "folder" && b.assetType !== "folder") return -1;
+    if (a.assetType !== "folder" && b.assetType === "folder") return 1;
+    return a.name.localeCompare(b.name);
+  });
+
+  const handleClickedAsset = (asset: Asset) => {
+    if (asset.assetType === "folder") {
+      void navigate(`/dashboard/folders/${asset.id}`);
+    }
+    setSelectedAsset(asset);
+  };
+
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>File</TableHead>
+            <TableHead>Asset</TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Size</TableHead>
-            <TableHead>Uploaded</TableHead>
+            <TableHead>Created</TableHead>
             <TableHead>URL</TableHead>
             <TableHead className="w-[50px]"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {assets.map((asset) => (
+          {sortedAssets.map((asset) => (
             <TableRow
               key={asset.id}
               className="cursor-pointer"
-              onClick={() => setSelectedAsset(asset)}
+              onClick={() => handleClickedAsset(asset)}
             >
               <TableCell>
                 <div className="flex items-center gap-4">
-                  <img
-                    src={asset.thumbnail}
-                    alt={asset.name}
-                    className="h-10 w-10 rounded object-cover bg-muted"
-                  />
-                  <div className="flex items-center gap-2">
-                    <FileIcon className="h-4 w-4 text-muted-foreground shrink-0" />
-                    <span className="font-medium">{asset.name}</span>
-                  </div>
+                  {asset.assetType === "folder" ? (
+                    <div className="h-10 w-10 rounded bg-muted flex items-center justify-center">
+                      <FolderIcon className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                  ) : (
+                    <img
+                      src={asset.thumbnail}
+                      alt={asset.name}
+                      className="h-10 w-10 rounded object-cover bg-muted"
+                    />
+                  )}
+                  <span className="font-medium">{asset.name}</span>
                 </div>
               </TableCell>
               <TableCell className="text-muted-foreground">
-                {asset.type}
+                {asset.assetType}
               </TableCell>
               <TableCell className="text-muted-foreground">
                 {asset.size}
@@ -77,14 +95,18 @@ const ListAssets = ({
                 {new Date(asset.uploadedAt).toLocaleDateString()}
               </TableCell>
               <TableCell className="max-w-[200px]">
-                <a
-                  href={asset.url}
-                  className="text-blue-600 hover:underline truncate block"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {asset.url}
-                </a>
+                {asset.assetType === "folder" ? (
+                  "-"
+                ) : (
+                  <a
+                    href={asset.url}
+                    className="text-blue-600 hover:underline truncate block"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {asset.url}
+                  </a>
+                )}
               </TableCell>
               <TableCell>
                 <DropdownMenu>
