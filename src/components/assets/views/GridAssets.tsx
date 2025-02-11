@@ -17,31 +17,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Separator } from "@/components/ui/separator";
-import { useNavigate } from "react-router-dom";
 
 interface GridAssetsProps {
   assets: Asset[];
   handleAction: (action: AssetAction, fileId: string) => void;
-  setSelectedAsset: (asset: Asset) => void;
+  handleClickedAsset: (asset: Asset) => void;
 }
 
 export default function GridAssets({
   assets,
   handleAction,
-  setSelectedAsset,
+  handleClickedAsset,
 }: GridAssetsProps) {
-  const navigate = useNavigate();
-
   const folders = assets.filter((asset) => asset.assetType === "folder");
   const files = assets.filter((asset) => asset.assetType !== "folder");
-
-  const handleAssetClick = (asset: Asset) => {
-    if (asset.assetType === "folder") {
-      void navigate(`/dashboard/my-space/${asset.id}`);
-      return;
-    }
-    setSelectedAsset(asset);
-  };
 
   return (
     <div className="space-y-8">
@@ -59,7 +48,7 @@ export default function GridAssets({
               <Card
                 key={folder.id}
                 className="cursor-pointer group h-32 hover:border-accent transition-colors"
-                onClick={() => handleAssetClick(folder)}
+                onClick={() => handleClickedAsset(folder)}
               >
                 <CardContent className="p-4 h-full flex flex-col justify-between">
                   <div className="flex items-center gap-3">
@@ -90,7 +79,7 @@ export default function GridAssets({
               <Card
                 key={file.id}
                 className="cursor-pointer group hover:border-accent transition-colors overflow-hidden"
-                onClick={() => handleAssetClick(file)}
+                onClick={() => handleClickedAsset(file)}
               >
                 <div className="aspect-video w-full relative">
                   <img

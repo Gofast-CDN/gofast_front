@@ -22,32 +22,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import type { Asset, AssetAction } from "@/types/asset";
-import { useNavigate } from "react-router-dom";
 
 interface ListAssetsProps {
   assets: Asset[];
   handleAction: (action: AssetAction, fileId: string) => void;
-  setSelectedAsset: (asset: Asset) => void;
+  handleClickedAsset: (asset: Asset) => void;
 }
 
 const ListAssets = ({
   assets,
   handleAction,
-  setSelectedAsset,
+  handleClickedAsset,
 }: ListAssetsProps) => {
-  const navigate = useNavigate();
   const sortedAssets = [...assets].sort((a, b) => {
     if (a.assetType === "folder" && b.assetType !== "folder") return -1;
     if (a.assetType !== "folder" && b.assetType === "folder") return 1;
     return a.name.localeCompare(b.name);
   });
-
-  const handleClickedAsset = (asset: Asset) => {
-    if (asset.assetType === "folder") {
-      void navigate(`/dashboard/my-space/${asset.id}`);
-    }
-    setSelectedAsset(asset);
-  };
 
   return (
     <div className="rounded-md border">
