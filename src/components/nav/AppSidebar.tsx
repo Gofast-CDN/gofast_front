@@ -99,11 +99,16 @@ export function AppSidebar() {
         <div className="p-4">
           <Button
             onClick={() => setIsUploadModalOpen(true)}
-            className="w-full gap-2 font-medium"
+            className={cn(
+              "w-full gap-2 font-medium",
+              "group-data-[collapsible=icon]:w-full group-data-[collapsible=icon]:justify-start group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:h-9 group-data-[collapsible=icon]:font-normal group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:text-foreground group-data-[collapsible=icon]:shadow-none"
+            )}
             size="lg"
           >
-            <Upload className="h-4 w-4" />
-            <span>Upload new file</span>
+            <Upload className="h-4 w-4 shrink-0" />
+            <span className="group-data-[collapsible=icon]:hidden overflow-hidden">
+              Upload new file
+            </span>
           </Button>
         </div>
         <SidebarContent>
