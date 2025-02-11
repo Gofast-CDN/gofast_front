@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { useSidebarState } from "@/hooks/useSidebaState";
 import { Header } from "@/components/sections/Header";
-import { AppSidebar } from "@/components/nav/appSidebar";
+import { AppSidebar } from "@/components/nav/AppSidebar";
 import { cn } from "@/lib/utils";
 
 const DashboardLayout = () => {
