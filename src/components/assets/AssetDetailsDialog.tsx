@@ -45,9 +45,9 @@ export default function AssetDetailsDialog({
                   <h4 className="font-medium">File Information</h4>
                 </div>
                 <dl className="grid grid-cols-2 gap-2 text-sm">
-                  <MetaItem label="Type" value={selectedAsset?.type ?? ""} />
-                  <MetaItem label="Size" value={selectedAsset?.size ?? ""} />
-                  <MetaItem label="Owner" value={selectedAsset?.owner ?? ""} />
+                  <MetaItem label="Type" value={selectedAsset.assetType} />
+                  <MetaItem label="Size" value={selectedAsset.size} />
+                  <MetaItem label="Owner" value={selectedAsset.owner} />
                   <MetaItem
                     label="Uploaded"
                     value={
@@ -66,7 +66,7 @@ export default function AssetDetailsDialog({
                   <Share2 className="h-4 w-4" />
                   <h4 className="font-medium">Share URL</h4>
                 </div>
-                <SharedLink url={selectedAsset.url} />
+                <SharedLink url={selectedAsset.url || ""} />
               </div>
             </div>
           </div>

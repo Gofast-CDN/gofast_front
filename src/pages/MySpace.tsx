@@ -1,8 +1,8 @@
 import { Asset } from "@/types/asset";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Grid, LayoutList } from "lucide-react";
-import { useState } from "react";
+import { Grid, LayoutList } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ContextMenu, ContextMenuTrigger } from "@/components/ui/context-menu";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,44 +12,70 @@ import {
 import ListAssets from "@/components/assets/views/ListAssets";
 import GridAssets from "@/components/assets/views/GridAssets";
 import AssetDetailsDialog from "@/components/assets/AssetDetailsDialog";
+import AssetsContextMenuAction from "@/components/assets/AssetsContextMenuAction";
 
 const assets: Asset[] = [
   {
     id: "1",
+    name: "Documents",
+    size: "9 KB",
+    owner: "John Doe",
+    uploadedAt: "2024-02-10T14:30:00Z",
+    assetType: "folder",
+  },
+  {
+    id: "2",
+    name: "Images",
+    size: "13 MB",
+    owner: "John Doe",
+    uploadedAt: "2024-02-10T14:30:00Z",
+    assetType: "folder",
+  },
+  {
+    id: "3",
     name: "react-patterns.pdf",
-    type: "application/pdf",
     size: "2.4 MB",
     owner: "John Doe",
     uploadedAt: "2024-02-10T14:30:00Z",
     url: "https://storage.gofast.dev/files/react-patterns.pdf",
     thumbnail: "https://placehold.co/40x40",
+    assetType: "application/pdf",
   },
   {
-    id: "2",
+    id: "4",
     name: "architecture.png",
-    type: "image/png",
     size: "856 KB",
     owner: "John Doe",
     uploadedAt: "2024-02-09T10:15:00Z",
     url: "https://storage.gofast.dev/files/architecture.png",
     thumbnail: "https://placehold.co/40x40",
+    assetType: "image/png",
   },
   {
-    id: "3",
+    id: "5",
     name: "api-doc.md",
-    type: "text/markdown",
     size: "12 KB",
     owner: "John Doe",
     uploadedAt: "2024-02-08T09:20:00Z",
     url: "https://storage.gofast.dev/files/api-doc.md",
     thumbnail: "https://placehold.co/40x40",
+    assetType: "image/png",
   },
 ];
 
+const VIEW_MODE_KEY = "gofast_view_mode_preference";
+
 export default function MySpace() {
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+  // const [searchTerm, setSearchTerm] = useState("");
+  const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
+    const savedMode = localStorage.getItem(VIEW_MODE_KEY);
+    return savedMode === "list" || savedMode === "grid" ? savedMode : "list";
+  });
+
+  useEffect(() => {
+    localStorage.setItem(VIEW_MODE_KEY, viewMode);
+  }, [viewMode]);
 
   const handleAction = (action: string, fileId: string) => {
     switch (action) {
@@ -66,37 +92,42 @@ export default function MySpace() {
   };
 
   return (
-    <>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">My assets</h1>
-          <div className="flex items-center gap-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
-                  {viewMode === "grid" ? (
-                    <Grid className="h-4 w-4" />
-                  ) : (
-                    <LayoutList className="h-4 w-4" />
-                  )}
-                  <span>{viewMode === "grid" ? "Grid view" : "List view"}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-40">
-                <DropdownMenuItem onClick={() => setViewMode("list")}>
-                  <LayoutList className="mr-2 h-4 w-4" />
-                  List view
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setViewMode("grid")}>
-                  <Grid className="mr-2 h-4 w-4" />
-                  Grid view
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+    <ContextMenu>
+      <ContextMenuTrigger className="flex flex-1">
+        <div className="space-y-6 w-full min-h-[calc(100vh-6rem)]">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold">
+              Showing 4 folders and 349 files
+            </h1>
+            <div className="flex items-center gap-4">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-2">
+                    {viewMode === "grid" ? (
+                      <Grid className="h-4 w-4" />
+                    ) : (
+                      <LayoutList className="h-4 w-4" />
+                    )}
+                    <span>
+                      {viewMode === "grid" ? "Grid view" : "List view"}
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                  <DropdownMenuItem onClick={() => setViewMode("list")}>
+                    <LayoutList className="mr-2 h-4 w-4" />
+                    List view
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setViewMode("grid")}>
+                    <Grid className="mr-2 h-4 w-4" />
+                    Grid view
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
-        </div>
 
-        <div className="flex items-center space-x-2">
+          {/* <div className="flex items-center space-x-2">
           <div className="relative flex-1">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -106,26 +137,29 @@ export default function MySpace() {
               className="pl-8"
             />
           </div>
-        </div>
+        </div> */}
 
-        {viewMode === "list" ? (
-          <ListAssets
-            assets={assets}
-            handleAction={handleAction}
-            setSelectedAsset={setSelectedAsset}
-          />
-        ) : (
-          <GridAssets
-            assets={assets}
-            handleAction={handleAction}
-            setSelectedAsset={setSelectedAsset}
-          />
-        )}
-      </div>
+          {viewMode === "list" ? (
+            <ListAssets
+              assets={assets}
+              handleAction={handleAction}
+              setSelectedAsset={setSelectedAsset}
+            />
+          ) : (
+            <GridAssets
+              assets={assets}
+              handleAction={handleAction}
+              setSelectedAsset={setSelectedAsset}
+            />
+          )}
+        </div>
+      </ContextMenuTrigger>
+
+      <AssetsContextMenuAction />
       <AssetDetailsDialog
         selectedAsset={selectedAsset}
         onClose={() => setSelectedAsset(null)}
       />
-    </>
+    </ContextMenu>
   );
 }
