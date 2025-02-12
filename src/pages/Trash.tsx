@@ -3,10 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import "../custom.css";  
-import docIcon from '../assets/doc-svgrepo-com.svg';
-import pdfIcon from '../assets/pdf-svgrepo-com.svg';
-import videoIcon from '../assets/video-file-svgrepo-com.svg';
-import folderIcon from '../assets/folder-with-files-svgrepo-com.svg'
+import docIcon from '../assets/text-select.svg';
+import pdfIcon from '../assets/file-text.svg';
+import videoIcon from '../assets/file-video.svg';
+import folderIcon from '../assets/folder-closed.svg'
 import SvgIcon from '@/components/svgIcon';
 import UploadModal from '@/components/UploadModal';
 

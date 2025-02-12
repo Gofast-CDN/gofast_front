@@ -3,12 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import "../custom.css";  
-import docIcon from '../assets/doc-svgrepo-com.svg';
-import pdfIcon from '../assets/pdf-svgrepo-com.svg';
-import videoIcon from '../assets/video-file-svgrepo-com.svg';
-import folderIcon from '../assets/folder-with-files-svgrepo-com.svg'
+import docIcon from '../assets/text-select.svg';
+import pdfIcon from '../assets/file-text.svg';
+import videoIcon from '../assets/file-video.svg';
+import folderIcon from '../assets/folder-closed.svg'
+import fileIcon from '../assets/file.svg';
 import SvgIcon from '@/components/svgIcon';
 import UploadModal from '@/components/UploadModal';
+import { Files, FilesIcon } from 'lucide-react';
 
 const Dashboard = () => {
   const [search, setSearch] = useState('');
@@ -75,6 +77,7 @@ const Dashboard = () => {
   const [pdfSvg, setPdfSvg] = useState('');
   const [videoSvg, setVideoSvg] = useState('');
   const [folderSvg, setFolderSvg] = useState('');
+  const [fileSvg, setFileSvg] = useState('');
 
   useEffect(() => {
     const loadSvg = async (file) => {
@@ -87,6 +90,7 @@ const Dashboard = () => {
     loadSvg(pdfIcon).then(setPdfSvg);
     loadSvg(videoIcon).then(setVideoSvg);
     loadSvg(folderIcon).then(setFolderSvg);
+    loadSvg(fileIcon).then(setFileSvg);
   }, []);
 
   
@@ -110,32 +114,22 @@ const Dashboard = () => {
         <div className="col-span-2 bg-white shadow-md rounded-md p-4">
           <div className="flex space-x-4">
             <button type="button" className="px-6 py-3.5 text-base font-medium text-white inline-flex items-center bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 rounded-lg text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-            <svg className="w-4 h-4 text-white me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
-                <path d="M10.036 8.278 9.258 7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z"/>
-                <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z"/>
-              </svg>
+              <SvgIcon color="white" svgContent={folderSvg} size="32px"/>
               Créer un dossier
             </button>
 
             <button type="button" className="px-6 py-3.5 text-base font-medium text-white inline-flex items-center bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 rounded-lg text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">
-              <svg className="w-4 h-4 text-white me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
-                <path d="M3.5 2.5A1 1 0 0 1 4.5 2h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-10a1 1 0 0 1-1-1v-11zM4.5 0A1.5 1.5 0 0 0 3 1.5v13a1.5 1.5 0 0 0 1.5 1.5h10a1.5 1.5 0 0 0 1.5-1.5V1.5A1.5 1.5 0 0 0 14.5 0h-10z"/>
-              </svg>
+              <SvgIcon color="white" svgContent={fileSvg} size="32px"/>
               Modifier le fichier
             </button>
 
             <button type="button" className="px-6 py-3.5 text-base font-medium text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-              <svg className="w-4 h-4 text-white me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
-                <path d="M2 1a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2zm4 4h12v10H6V5z"/>
-              </svg>
+              <SvgIcon color="white" svgContent={fileSvg} size="32px"/>
               Supprimer des fichiers
             </button>
 
             <button type="button" className="px-6 py-3.5 text-base font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-              <svg className="w-4 h-4 text-white me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
-                <path d="M10.036 8.278 9.258 7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z"/>
-                <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z"/>
-              </svg>
+              <SvgIcon color="white" svgContent={fileSvg} size="32px"/>
               Exporter les fichiers
             </button>
           </div>
