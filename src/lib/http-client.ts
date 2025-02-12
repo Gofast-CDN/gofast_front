@@ -43,8 +43,8 @@ export async function httpClient<T>(
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Request failed");
+    const err = await response.json();
+    throw new Error(err.message || err.error || "Request failed");
   }
 
   return response.json();

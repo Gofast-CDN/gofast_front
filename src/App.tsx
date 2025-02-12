@@ -6,6 +6,7 @@ import { FetchOptions, httpClient } from "./lib/http-client";
 import DashboardRouter from "./routing/DashboardRouter";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routing/ProtectedRoute";
+import { AuthProvider } from "./hooks/auth/AuthContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,20 +34,22 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/:userId/*"
-            element={
-              <ProtectedRoute>
-                <DashboardRouter />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/:userId/*"
+              element={
+                <ProtectedRoute>
+                  <DashboardRouter />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </Router>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

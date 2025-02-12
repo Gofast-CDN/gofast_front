@@ -7,12 +7,13 @@ import type {
   RegisterCredentials,
 } from "@/types/auth";
 import { httpClient } from "@/lib/http-client";
-import { setCookie } from "@/lib/utils/cookies";
+import { useAuth } from "./AuthContext";
 
 export function useAuthMutation() {
+  const auth = useAuth();
   const navigate = useNavigate();
 
-  const login = useMutation({
+  const loginMutation = useMutation({
     mutationKey: ["login"],
     mutationFn: (credentials: LoginCredentials) =>
       httpClient<AuthResponse>("/users/login", {
@@ -21,16 +22,12 @@ export function useAuthMutation() {
         body: credentials,
       }),
     onSuccess: (data) => {
-      // Store token in secure cookie
-      setCookie("token", data.token);
-      setCookie("userId", data.userId);
+      auth.login(data);
 
       toast({
         title: data.message,
         description: `Welcome back, ${data.email}!`,
       });
-
-      void navigate(`/${data.userId}`);
     },
     onError: (error: Error) => {
       toast({
@@ -41,7 +38,7 @@ export function useAuthMutation() {
     },
   });
 
-  const register = useMutation({
+  const registerMutation = useMutation({
     mutationKey: ["register"],
     mutationFn: (credentials: RegisterCredentials) =>
       httpClient<AuthResponse>("/users/register", {
@@ -66,5 +63,5 @@ export function useAuthMutation() {
     },
   });
 
-  return { login, register };
+  return { loginMutation, registerMutation };
 }

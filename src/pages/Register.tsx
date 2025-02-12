@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -6,6 +6,8 @@ import { toast } from "@/hooks/use-toast";
 import AuthForm from "@/components/form/AuthForm";
 import { useAuthMutation } from "@/hooks/auth/useAuthMutation";
 import type { RegisterCredentials } from "@/types/auth";
+import { useAuth } from "@/hooks/auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const image = "/register_picture.png";
 
@@ -45,7 +47,9 @@ const formSchema = z
   });
 
 export default function SignUp() {
-  const { register } = useAuthMutation();
+  const { registerMutation } = useAuthMutation();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -72,10 +76,15 @@ export default function SignUp() {
         email: values.email,
         password: values.password,
       };
-      register.mutate(credentials);
+      registerMutation.mutate(credentials);
     },
-    [register]
+    [registerMutation]
   );
+
+  useEffect(() => {
+    if (!user) return;
+    void navigate(`/${user.id}`);
+  }, [user, navigate]);
 
   return (
     <AuthForm<FormValues>
@@ -107,7 +116,7 @@ export default function SignUp() {
       form={form}
       onSubmit={onSubmit}
       onError={onError}
-      isLoading={register.isPending}
+      isLoading={registerMutation.isPending}
       image={image}
       buttonText="Register"
       redirectText="Already have an account? "

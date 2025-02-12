@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -6,6 +6,8 @@ import { toast } from "@/hooks/use-toast";
 import AuthForm from "@/components/form/AuthForm";
 import { useAuthMutation } from "@/hooks/auth/useAuthMutation";
 import { LoginCredentials } from "@/types/auth";
+import { useAuth } from "@/hooks/auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const image = "/login_picture.jpeg";
 
@@ -26,7 +28,9 @@ const formSchema = z.object({
 });
 
 export default function Login() {
-  const { login } = useAuthMutation();
+  const { user } = useAuth();
+  const { loginMutation } = useAuthMutation();
+  const navigate = useNavigate();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -48,10 +52,15 @@ export default function Login() {
 
   const onSubmit = useCallback(
     (values: LoginCredentials) => {
-      login.mutate(values);
+      loginMutation.mutate(values);
     },
-    [login]
+    [loginMutation]
   );
+
+  useEffect(() => {
+    if (!user) return;
+    void navigate(`/${user.id}`);
+  }, [user, navigate]);
 
   return (
     <AuthForm<FormValues>
@@ -76,7 +85,7 @@ export default function Login() {
       form={form}
       onSubmit={onSubmit}
       onError={onError}
-      isLoading={login.isPending}
+      isLoading={loginMutation.isPending}
       image={image}
       buttonText="Login"
       redirectText="Didn't have an account? "
