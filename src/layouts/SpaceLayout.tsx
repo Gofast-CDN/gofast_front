@@ -103,6 +103,7 @@ export interface SpaceContextType {
 
 const SpaceLayout = () => {
   const { id: folderId } = useParams();
+
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
@@ -186,13 +187,14 @@ function SpaceHeader({
   folderId?: string;
 }) {
   const currentFolder = assets.find((a) => a.id === folderId);
+  const { userId } = useParams();
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-2xl">
           <Link
-            to="/dashboard/my-space"
+            to={`/${userId}/my-space`}
             className={cn(
               "hover:text-foreground transition-colors",
               !folderId ? "font-bold pointer-events-none" : "font-normal"

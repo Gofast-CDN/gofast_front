@@ -18,7 +18,7 @@ import {
   Trash2,
   Upload,
 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
   Collapsible,
   CollapsibleContent,
@@ -43,25 +43,25 @@ interface MenuItem {
 }
 
 // Export the items array
-export const items: MenuItem[] = [
+export const getNavItems = (userId: string): MenuItem[] => [
   {
     title: "Home",
-    url: "/dashboard",
+    url: `/${userId}`,
     icon: LayoutDashboard,
   },
   {
     title: "My space",
-    url: "/dashboard/my-space",
+    url: `/${userId}/my-space`,
     icon: FolderTree,
   },
   {
     title: "Trash",
-    url: "/dashboard/trash",
+    url: `/${userId}/trash`,
     icon: Trash2,
   },
   {
     title: "Settings",
-    url: "/dashboard/settings",
+    url: `/${userId}/settings`,
     icon: Settings,
   },
 ];
@@ -69,6 +69,8 @@ export const items: MenuItem[] = [
 export function AppSidebar() {
   const location = useLocation();
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const { userId } = useParams();
+  const items = getNavItems(userId ?? "");
 
   const { upload, isUploading } = useFileUpload({
     onSuccess: () => {
@@ -81,12 +83,11 @@ export function AppSidebar() {
       ? location.pathname.slice(0, -1)
       : location.pathname;
 
-    // Special case for root dashboard path
-    if (itemUrl === "/dashboard") {
+    // Special case for root user path
+    if (itemUrl === `/${userId}`) {
       return currentPath === itemUrl;
     }
 
-    // For other paths, check if current path starts with the menu item URL
     return currentPath === itemUrl || currentPath.startsWith(`${itemUrl}/`);
   };
 
