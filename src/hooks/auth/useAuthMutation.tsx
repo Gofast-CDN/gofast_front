@@ -6,40 +6,29 @@ import type {
   AuthResponse,
   RegisterCredentials,
 } from "@/types/auth";
+import { httpClient } from "@/lib/http-client";
+import { setCookie } from "@/lib/utils/cookies";
 
 export function useAuthMutation() {
   const navigate = useNavigate();
 
   const login = useMutation({
     mutationKey: ["login"],
-    mutationFn: async (
-      credentials: LoginCredentials
-    ): Promise<AuthResponse> => {
-      const response = await fetch("http://localhost:80/api/v1/users/login", {
+    mutationFn: (credentials: LoginCredentials) =>
+      httpClient<AuthResponse>("/users/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Login failed");
-      }
-
-      return response.json();
-    },
+        body: credentials,
+      }),
     onSuccess: (data) => {
-      // Store tokens
-      localStorage.setItem("token", data.token);
+      // Store token in secure cookie
+      setCookie("token", data.token);
+      setCookie("userId", data.userId);
 
       toast({
         title: data.message,
         description: `Welcome back, ${data.email}!`,
       });
 
-      // Navigate to user's space
       void navigate(`/${data.userId}`);
     },
     onError: (error: Error) => {
@@ -53,27 +42,11 @@ export function useAuthMutation() {
 
   const register = useMutation({
     mutationKey: ["register"],
-    mutationFn: async (
-      credentials: RegisterCredentials
-    ): Promise<AuthResponse> => {
-      const response = await fetch(
-        "http://localhost:80/api/v1/users/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credentials),
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Registration failed");
-      }
-
-      return response.json();
-    },
+    mutationFn: (credentials: RegisterCredentials) =>
+      httpClient<AuthResponse>("/users/register", {
+        method: "POST",
+        body: credentials,
+      }),
     onSuccess: () => {
       toast({
         title: "Registration successful",

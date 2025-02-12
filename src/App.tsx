@@ -1,8 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import DashboardRouter from "./routing/DashboardRouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { FetchOptions, httpClient } from "./lib/http-client";
+import DashboardRouter from "./routing/DashboardRouter";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -10,9 +11,17 @@ const queryClient = new QueryClient({
       staleTime: 5 * 60 * 1000, // 5 minutes
       retry: 1,
       refetchOnWindowFocus: false,
+      queryFn: async ({ queryKey }) => {
+        const [endpoint, options] = queryKey as [
+          string,
+          FetchOptions | undefined,
+        ];
+        return httpClient(endpoint, options);
+      },
     },
   },
 });
+
 // Lazy-loaded components for public routes only
 const Home = React.lazy(() => import("./pages/Home"));
 const Login = React.lazy(() => import("./pages/Login"));
