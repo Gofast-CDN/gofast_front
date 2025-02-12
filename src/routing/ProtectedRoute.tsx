@@ -1,23 +1,26 @@
-import React from "react";
-// import { Navigate } from "react-router-dom";
-// import { useAuth } from "../hooks/useAuth";
-// import LoadingSpinner from "./LoadingSpinner";
+// src/routing/ProtectedRoute.tsx
+import { Navigate, useParams } from "react-router-dom";
+import { useAuth } from "@/hooks/auth/AuthContext";
 
-const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
-  // const { user } = useAuth();
+export default function ProtectedRoute({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { isAuthenticated, isLoading, hasAccess } = useAuth();
+  const { userId } = useParams();
 
-  // Show loading state while checking authentication
-  // if (user === null) {
-  //   return <LoadingSpinner />;
-  // }
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  // Redirect to login if not authenticated
-  // if (user === false) {
-  //   return <Navigate to="/login" />;
-  // }
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
 
-  // Render children if authenticated
-  return children;
-};
+  if (userId && !hasAccess(userId)) {
+    return <div>unauthorized</div>;
+  }
 
-export default ProtectedRoute;
+  return <>{children}</>;
+}
