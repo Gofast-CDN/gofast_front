@@ -10,7 +10,6 @@ import folderIcon from '../assets/folder-closed.svg'
 import fileIcon from '../assets/file.svg';
 import SvgIcon from '@/components/svgIcon';
 import UploadModal from '@/components/UploadModal';
-import { Files, FilesIcon } from 'lucide-react';
 
 const Dashboard = () => {
   const [search, setSearch] = useState('');
