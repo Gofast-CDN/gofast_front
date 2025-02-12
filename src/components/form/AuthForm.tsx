@@ -139,7 +139,7 @@ export default function AuthForm<V extends FieldValues>({
       <div className="hidden bg-muted lg:block">
         <img
           src={image}
-          alt="ETH picture"
+          alt="CDN picture"
           width="1920"
           height="1080"
           className="h-full w-full object-cover"
