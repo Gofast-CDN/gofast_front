@@ -16,6 +16,7 @@ export function useAuthMutation() {
     mutationKey: ["login"],
     mutationFn: (credentials: LoginCredentials) =>
       httpClient<AuthResponse>("/users/login", {
+        protected: false,
         method: "POST",
         body: credentials,
       }),
@@ -44,6 +45,7 @@ export function useAuthMutation() {
     mutationKey: ["register"],
     mutationFn: (credentials: RegisterCredentials) =>
       httpClient<AuthResponse>("/users/register", {
+        protected: false,
         method: "POST",
         body: credentials,
       }),

@@ -1,23 +1,16 @@
-import React from "react";
-// import { Navigate } from "react-router-dom";
-// import { useAuth } from "../hooks/useAuth";
-// import LoadingSpinner from "./LoadingSpinner";
+import { Navigate, useParams } from "react-router-dom";
+import { isTokenValid } from "@/lib/utils/jwt";
 
-const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
-  // const { user } = useAuth();
+export default function ProtectedRoute({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { userId } = useParams();
 
-  // Show loading state while checking authentication
-  // if (user === null) {
-  //   return <LoadingSpinner />;
-  // }
+  if (!isTokenValid(userId)) {
+    return <Navigate to="/login" />;
+  }
 
-  // Redirect to login if not authenticated
-  // if (user === false) {
-  //   return <Navigate to="/login" />;
-  // }
-
-  // Render children if authenticated
-  return children;
-};
-
-export default ProtectedRoute;
+  return <>{children}</>;
+}

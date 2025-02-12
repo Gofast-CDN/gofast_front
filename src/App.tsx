@@ -4,6 +4,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { FetchOptions, httpClient } from "./lib/http-client";
 import DashboardRouter from "./routing/DashboardRouter";
+import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./routing/ProtectedRoute";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,22 +25,26 @@ const queryClient = new QueryClient({
 });
 
 // Lazy-loaded components for public routes only
-const Home = React.lazy(() => import("./pages/Home"));
+const Landing = React.lazy(() => import("./pages/Landing"));
 const Login = React.lazy(() => import("./pages/Login"));
 const Register = React.lazy(() => import("./pages/Register"));
-
-// Non-lazy NotFound since it's used in multiple places
-import NotFound from "./pages/NotFound";
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/:userId/*" element={<DashboardRouter />} />
+          <Route
+            path="/:userId/*"
+            element={
+              <ProtectedRoute>
+                <DashboardRouter />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
