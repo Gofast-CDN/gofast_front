@@ -1,18 +1,19 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { useLocation } from "react-router-dom";
-import { items } from "@/components/nav/AppSidebar";
+import { useLocation, useParams } from "react-router-dom";
+import { getNavItems } from "@/components/nav/AppSidebar";
 
 export function Header() {
   const location = useLocation();
+  const { userId } = useParams();
+  const items = getNavItems(userId ?? "");
 
   const getCurrentPageTitle = (): string => {
     const currentPath = location.pathname.endsWith("/")
       ? location.pathname.slice(0, -1)
       : location.pathname;
 
-    // Find the matching route with the longest URL (most specific match)
     const currentItem = items
       .filter(
         (item) =>
@@ -21,11 +22,11 @@ export function Header() {
       .sort((a, b) => b.url.length - a.url.length)[0];
 
     // Special case: don't return Home for nested paths
-    if (currentItem?.url === "/dashboard" && currentPath !== "/dashboard") {
+    if (currentItem?.url === `/${userId}` && currentPath !== `/${userId}`) {
       return "Not found";
     }
 
-    return currentItem.title;
+    return currentItem?.title || "Not found";
   };
 
   return (
