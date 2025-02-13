@@ -133,7 +133,6 @@ export default function Home() {
 
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-2 space-y-6">
-          {/* Recent Folders Grid */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Recent Folders</CardTitle>
@@ -166,7 +165,6 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          {/* Recent Files List */}
           <Card>
             <CardHeader>
               <CardTitle>Recent Files</CardTitle>
