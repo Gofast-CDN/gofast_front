@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
 import "../custom.css";
 import docIcon from "../assets/text-select.svg";
 import pdfIcon from "../assets/file-text.svg";
 import videoIcon from "../assets/file-video.svg";
 import folderIcon from "../assets/folder-closed.svg";
-import fileIcon from "../assets/file.svg";
 import SvgIcon from "@/components/svgIcon";
 import UploadModal from "@/components/UploadModal";
+import { File, Folder } from "lucide-react";
+import { StoragePieChart } from "@/components/charts/StoragePieChart";
 
 const Dashboard = () => {
   const [search, setSearch] = useState("");
@@ -66,8 +66,6 @@ const Dashboard = () => {
     "Recent Folder 3", // Sample recent folders
   ]);
 
-  const storagePercentage = (storageData.used / storageData.total) * 100;
-
   const folderColors = [
     "bg-gray",
     "bg-red",
@@ -106,7 +104,7 @@ const Dashboard = () => {
   const [pdfSvg, setPdfSvg] = useState("");
   const [videoSvg, setVideoSvg] = useState("");
   const [folderSvg, setFolderSvg] = useState("");
-  const [fileSvg, setFileSvg] = useState("");
+  // const [fileSvg, setFileSvg] = useState("");
 
   useEffect(() => {
     const loadSvg = async (file: string) => {
@@ -125,7 +123,7 @@ const Dashboard = () => {
       setPdfSvg(await loadSvg(pdfIcon));
       setVideoSvg(await loadSvg(videoIcon));
       setFolderSvg(await loadSvg(folderIcon));
-      setFileSvg(await loadSvg(fileIcon));
+      // setFileSvg(await loadSvg(fileIcon));
     };
 
     void fetchSvgs(); // ✅ Ajout de 'void' pour éviter l'erreur ESLint
@@ -147,38 +145,31 @@ const Dashboard = () => {
       <div className="grid grid-cols-3 gap-6 p-6">
         {/* Left Section - Files and Folders */}
         <div className="col-span-2 bg-white shadow-md rounded-md p-4">
-          <div className="flex space-x-4">
-            <button
-              type="button"
-              className="px-6 py-3.5 text-base font-medium text-white inline-flex items-center bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 rounded-lg text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-            >
-              <SvgIcon color="white" svgContent={folderSvg} size="32px" />
+          <div className="flex space-x-2">
+            <Button>
+              <Folder />
               Créer un dossier
-            </button>
+            </Button>
 
-            <button
-              type="button"
-              className="px-6 py-3.5 text-base font-medium text-white inline-flex items-center bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 rounded-lg text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800"
-            >
-              <SvgIcon color="white" svgContent={fileSvg} size="32px" />
-              Modifier le fichier
-            </button>
+            <Button>
+              <File />
+              Créer un fichier
+            </Button>
 
-            <button
-              type="button"
-              className="px-6 py-3.5 text-base font-medium text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 rounded-lg text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
-            >
-              <SvgIcon color="white" svgContent={fileSvg} size="32px" />
-              Supprimer des fichiers
-            </button>
+            <Button>
+              <File />
+              Modifier un fichier
+            </Button>
 
-            <button
-              type="button"
-              className="px-6 py-3.5 text-base font-medium text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              <SvgIcon color="white" svgContent={fileSvg} size="32px" />
-              Exporter les fichiers
-            </button>
+            <Button>
+              <File />
+              Supprimer un fichier
+            </Button>
+
+            <Button>
+              <File />
+              Exporter un fichier
+            </Button>
           </div>
 
           <div className="flex justify-between items-center mb-4">
@@ -266,15 +257,10 @@ const Dashboard = () => {
           </table>
         </div>
 
-        {/* Right Section - Storage Usage and Recent Folders */}
         <div className="bg-white shadow-md rounded-md p-4 space-y-4">
           <h3 className="text-xl font-semibold">Capacité de stockage</h3>
-          <div className="flex justify-between">
-            <span>Total : {storageData.total} GB</span>
-            <span>Utilisé : {storageData.used} GB</span>
-          </div>
 
-          <Progress value={storagePercentage} className="my-4" />
+          <StoragePieChart />
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
