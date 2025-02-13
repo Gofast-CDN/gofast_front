@@ -15,11 +15,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/hooks/auth/AuthContext";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
+  const { user, logout } = useAuth();
 
-  const displayName = "Jogn Doe";
+  if (!user) return null;
+
+  const displayName = user.email.split("@")[0];
 
   return (
     <SidebarMenu>
@@ -81,7 +85,7 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => console.log("logout")}>
+            <DropdownMenuItem onClick={logout}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Déconnexion</span>
             </DropdownMenuItem>
