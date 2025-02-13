@@ -1,6 +1,13 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface CaptchaPageProps {
   setIsVerified: (isVerified: boolean) => void;
@@ -46,13 +53,23 @@ export default function CaptchaPage({ setIsVerified }: CaptchaPageProps) {
   };
 
   return (
-    <div>
-      <h1>Veuillez valider le reCAPTCHA pour accéder au site</h1>
-      <ReCAPTCHA
-        sitekey="6LeQLdYqAAAAAGPM4Qn7q3Fys1xuijRoRDG6niho" // Remplace par ta clé publique reCAPTCHA v2
-        ref={recaptchaRef}
-      />
-      <button onClick={handleVerification}>Valider</button>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <Card>
+        <CardHeader>
+          <h1 className="text-2xl font-bold text-center">
+            Valider le CAPTCHA pour accéder au site
+          </h1>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center gap-4">
+          <ReCAPTCHA
+            sitekey="6LeQLdYqAAAAAGPM4Qn7q3Fys1xuijRoRDG6niho"
+            ref={recaptchaRef}
+          />
+        </CardContent>
+        <CardFooter className="flex justify-center">
+          <Button onClick={handleVerification}>Valider</Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 }
