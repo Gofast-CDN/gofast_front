@@ -19,11 +19,14 @@ export default function CaptchaPage({ setIsVerified }: CaptchaPageProps) {
     }
 
     try {
-      const response = await fetch("http://localhost:80/api/v1/captcha/verify-recaptcha", {
-        method: "POST",
-        body: JSON.stringify({ token }),
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await fetch(
+        "http://localhost:80/api/v1/captcha/verify-recaptcha",
+        {
+          method: "POST",
+          body: JSON.stringify({ token }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       const result = await response.json();
       if (result.success) {
@@ -32,7 +35,8 @@ export default function CaptchaPage({ setIsVerified }: CaptchaPageProps) {
 
         // Redirige l'utilisateur vers la page de login ou la page précédente s'il en vient
         const from = location.state?.from || "/login"; // Redirige vers /login si aucune page précédente
-        navigate(from, { replace: true });
+        // Utilisation de void pour éviter les erreurs de promesses flottantes
+        void navigate(from, { replace: true });
       } else {
         alert("Échec de la validation reCAPTCHA.");
       }
