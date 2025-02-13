@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import AssetsContextMenuAction from "@/components/assets/AssetsContextMenuAction";
 import { CreateFolderModal } from "@/components/assets/CreateFolderModal";
 import AssetDetailsDialog from "@/components/assets/AssetDetailsDialog";
@@ -103,6 +103,8 @@ export interface SpaceContextType {
 
 const SpaceLayout = () => {
   const { id: folderId } = useParams();
+  const location = useLocation();
+  const isMySpace = location.pathname.includes("my-space");
 
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
@@ -141,11 +143,13 @@ const SpaceLayout = () => {
     <ContextMenu>
       <ContextMenuTrigger className="flex flex-1">
         <div className="space-y-6 w-full min-h-[calc(100vh-6rem)]">
-          <SpaceHeader
-            viewMode={viewMode}
-            setViewMode={setViewMode}
-            folderId={folderId}
-          />
+          {isMySpace && (
+            <SpaceHeader
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              folderId={folderId}
+            />
+          )}
 
           <Outlet
             context={{

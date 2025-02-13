@@ -1,317 +1,197 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import "../custom.css";
-import docIcon from "../assets/text-select.svg";
-import pdfIcon from "../assets/file-text.svg";
-import videoIcon from "../assets/file-video.svg";
-import folderIcon from "../assets/folder-closed.svg";
-import SvgIcon from "@/components/svgIcon";
-import UploadModal from "@/components/UploadModal";
-import { File, Folder } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ListAssets from "@/components/assets/views/ListAssets";
+import type { Asset } from "@/types/asset";
+import { FolderIcon } from "lucide-react";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { SpaceContextType } from "@/layouts/SpaceLayout";
 import { StoragePieChart } from "@/components/charts/StoragePieChart";
 
-const Dashboard = () => {
+const mockFolders: Asset[] = [
+  {
+    id: "1",
+    name: "Documents",
+    size: "9 KB",
+    owner: "John Doe",
+    uploadedAt: "2024-02-10T14:30:00Z",
+    assetType: "folder",
+  },
+  {
+    id: "2",
+    name: "Images",
+    size: "15 MB",
+    owner: "John Doe",
+    uploadedAt: "2024-02-09T14:30:00Z",
+    assetType: "folder",
+  },
+  {
+    id: "3",
+    name: "Projects",
+    size: "24 MB",
+    owner: "John Doe",
+    uploadedAt: "2024-02-08T14:30:00Z",
+    assetType: "folder",
+  },
+];
+
+const mockFiles: Asset[] = [
+  {
+    id: "4",
+    name: "Project Report.pdf",
+    size: "2.5 MB",
+    owner: "John Doe",
+    uploadedAt: "2024-02-15T10:00:00Z",
+    url: "https://example.com/report.pdf",
+    thumbnail: "https://placehold.co/40x40",
+    assetType: "application/pdf",
+  },
+  {
+    id: "5",
+    name: "Architecture Diagram.png",
+    size: "1.8 MB",
+    owner: "John Doe",
+    uploadedAt: "2024-02-14T15:30:00Z",
+    url: "https://example.com/architecture.png",
+    thumbnail: "https://placehold.co/40x40",
+    assetType: "image/png",
+  },
+  {
+    id: "6",
+    name: "Meeting Notes.docx",
+    size: "500 KB",
+    owner: "Jane Smith",
+    uploadedAt: "2024-02-13T09:15:00Z",
+    url: "https://example.com/notes.docx",
+    thumbnail: "https://placehold.co/40x40",
+    assetType: "application/msword",
+  },
+  {
+    id: "7",
+    name: "Presentation.pptx",
+    size: "4.2 MB",
+    owner: "John Doe",
+    uploadedAt: "2024-02-12T16:45:00Z",
+    url: "https://example.com/presentation.pptx",
+    thumbnail: "https://placehold.co/40x40",
+    assetType: "application/vnd.ms-powerpoint",
+  },
+  {
+    id: "8",
+    name: "Budget 2024.xlsx",
+    size: "1.1 MB",
+    owner: "Jane Smith",
+    uploadedAt: "2024-02-11T11:20:00Z",
+    url: "https://example.com/budget.xlsx",
+    thumbnail: "https://placehold.co/40x40",
+    assetType: "application/vnd.ms-excel",
+  },
+  {
+    id: "9",
+    name: "Product Demo.mp4",
+    size: "28.5 MB",
+    owner: "John Doe",
+    uploadedAt: "2024-02-10T14:00:00Z",
+    url: "https://example.com/demo.mp4",
+    thumbnail: "https://placehold.co/40x40",
+    assetType: "video/mp4",
+  },
+];
+
+export default function Home() {
+  const { userId } = useParams();
   const [search, setSearch] = useState("");
-  const [storageData /* , setStorageData */] = useState({
-    total: 1000, // Total storage in GB
-    used: 500, // Used storage in GB
-    fileTypes: {
-      images: 200, // Storage used by images
-      videos: 150, // Storage used by videos
-      documents: 100, // Storage used by documents
-    },
-  });
-  const [recentFiles /* , setRecentFiles */] = useState([
-    {
-      name: "file1.txt",
-      size: "15 KB",
-      lastEdited: new Date("2025-02-12T02:30:00"),
-    },
-    {
-      name: "file2.pdf",
-      size: "1.2 MB",
-      lastEdited: new Date("2025-01-25T09:15:00"),
-    },
-    {
-      name: "file3.mp4",
-      size: "350 MB",
-      lastEdited: new Date("2025-02-10T18:00:00"),
-    },
-    {
-      name: "file4.pdf",
-      size: "15 KB",
-      lastEdited: new Date("2025-02-12T02:30:00"),
-    },
-    {
-      name: "file5.pdf",
-      size: "1.2 MB",
-      lastEdited: new Date("2025-01-25T09:15:00"),
-    },
-    {
-      name: "file6.txt",
-      size: "350 MB",
-      lastEdited: new Date("2025-02-10T18:00:00"),
-    },
-  ]);
 
-  const [folders /* , setFolders */] = useState([
-    { name: "Folder 1", lastEdited: new Date("2025-02-12T02:30:00") },
-    { name: "Folder 2", lastEdited: new Date("2025-01-25T09:15:00") },
-    { name: "Folder 3", lastEdited: new Date("2025-02-10T18:00:00") },
-  ]);
-  const [recentFolders /* , setRecentFolders */] = useState([
-    "Recent Folder 1",
-    "Recent Folder 2",
-    "Recent Folder 3", // Sample recent folders
-  ]);
+  const { setSelectedAsset, handleAction } =
+    useOutletContext<SpaceContextType>();
 
-  const folderColors = [
-    "bg-gray",
-    "bg-red",
-    "bg-yellow",
-    "bg-green",
-    "bg-blue",
-    "bg-indigo",
-    "bg-purple",
-    "bg-pink",
-  ];
+  const navigate = useNavigate();
 
-  const fileTypeColors = {
-    images: "#059669",
-    videos: "#DC2626",
-    documents: "#D97706",
-    folders: "#2563EB",
-  };
-
-  const formatDate = (date: Date) => {
-    const today = new Date();
-    const diffTime = today.getTime() - date.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) {
-      const hours = date.getHours().toString().padStart(2, "0");
-      const minutes = date.getMinutes().toString().padStart(2, "0");
-      return `${hours}:${minutes}`;
-    } else if (diffDays === 1) {
-      return "Hier";
-    } else {
-      return date.toLocaleDateString("fr-FR");
+  const handleClickedAsset = (asset: Asset) => {
+    if (asset.assetType === "folder") {
+      void navigate(`/${userId}/my-space/${asset.id}`);
+      return;
     }
+    setSelectedAsset(asset);
   };
-
-  const [docSvg, setDocSvg] = useState("");
-  const [pdfSvg, setPdfSvg] = useState("");
-  const [videoSvg, setVideoSvg] = useState("");
-  const [folderSvg, setFolderSvg] = useState("");
-  // const [fileSvg, setFileSvg] = useState("");
-
-  useEffect(() => {
-    const loadSvg = async (file: string) => {
-      try {
-        const response = await fetch(file);
-        if (!response.ok) throw new Error(`Failed to load SVG: ${file}`);
-        return await response.text();
-      } catch (error) {
-        console.error(error);
-        return ""; // Retourne une chaîne vide en cas d'erreur
-      }
-    };
-
-    const fetchSvgs = async () => {
-      setDocSvg(await loadSvg(docIcon));
-      setPdfSvg(await loadSvg(pdfIcon));
-      setVideoSvg(await loadSvg(videoIcon));
-      setFolderSvg(await loadSvg(folderIcon));
-      // setFileSvg(await loadSvg(fileIcon));
-    };
-
-    void fetchSvgs(); // ✅ Ajout de 'void' pour éviter l'erreur ESLint
-  }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Top Section - Search and Upload */}
-      <div className="p-4 flex items-center justify-between border-b bg-white shadow-sm">
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
         <Input
-          placeholder="Rechercher..."
+          placeholder="Search assets..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-1/3 border border-gray-300 p-2 rounded-md"
+          className="w-1/3"
         />
-        <UploadModal />
+        <div className="space-x-2">
+          <Button variant="default">New Folder</Button>
+          <Button variant="default">Upload</Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-6 p-6">
-        {/* Left Section - Files and Folders */}
-        <div className="col-span-2 bg-white shadow-md rounded-md p-4">
-          <div className="flex space-x-2">
-            <Button>
-              <Folder />
-              Créer un dossier
-            </Button>
+      <div className="grid grid-cols-3 gap-6">
+        <div className="col-span-2 space-y-6">
+          {/* Recent Folders Grid */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Recent Folders</CardTitle>
+              <Button variant="ghost" size="sm">
+                View all
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-4">
+                {mockFolders.map((folder) => (
+                  <Card
+                    key={folder.id}
+                    className="cursor-pointer hover:bg-accent transition-colors p-4"
+                    onClick={() => handleClickedAsset(folder)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded bg-muted flex items-center justify-center">
+                        <FolderIcon className="h-6 w-6 text-muted-foreground" />
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className="font-medium text-sm">{folder.name}</h3>
+                        <p className="text-xs text-muted-foreground">
+                          {folder.size}
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
-            <Button>
-              <File />
-              Créer un fichier
-            </Button>
-
-            <Button>
-              <File />
-              Modifier un fichier
-            </Button>
-
-            <Button>
-              <File />
-              Supprimer un fichier
-            </Button>
-
-            <Button>
-              <File />
-              Exporter un fichier
-            </Button>
-          </div>
-
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-semibold">Mes Dossiers</h3>
-            <Button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-              Voir Tous
-            </Button>
-          </div>
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            {folders.map((folder, idx) => {
-              const randomColor = folderColors[idx];
-              const formattedDate = formatDate(folder.lastEdited);
-
-              return (
-                <div
-                  key={idx}
-                  className={`folder-icon ${randomColor}-500 p-4 rounded-md text-center flex items-center justify-center`}
-                >
-                  <div className={`${randomColor}-600 folder-flap`}></div>
-                  <div className={`${randomColor}-700 folder-body relative`}>
-                    {/* Titre en haut à gauche */}
-                    <span className="text-white text-lg font-semibold absolute top-2 left-2">
-                      {folder.name}
-                    </span>
-
-                    {/* Date en bas à droite */}
-                    <p className="text-white text-xs absolute bottom-2 right-2">
-                      {formattedDate}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <h4 className="text-lg font-medium">Derniers fichiers uploadés</h4>
-          <table className="table-auto mt-2 w-full">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 text-left">Icône</th>
-                <th className="px-4 py-2 text-left">Nom du fichier</th>
-                <th className="px-4 py-2 text-left">Taille</th>
-                <th className="px-4 py-2 text-left">Dernière édition</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentFiles.map((file, idx) => (
-                <tr key={idx} className="border-t">
-                  <td className="px-4 py-2">
-                    {file.name.endsWith(".txt") && (
-                      <img
-                        src={docIcon}
-                        alt="Doc Icon"
-                        className="h-5 w-5 text-gray-500"
-                      />
-                    )}
-
-                    {file.name.endsWith(".pdf") && (
-                      <img
-                        src={pdfIcon}
-                        alt="PDF Icon"
-                        className="h-5 w-5 text-red-500"
-                      />
-                    )}
-
-                    {file.name.endsWith(".mp4") && (
-                      <img
-                        src={videoIcon}
-                        alt="Video Icon"
-                        className="h-5 w-5 text-blue-500"
-                      />
-                    )}
-                  </td>
-
-                  <td className="px-4 py-2">{file.name}</td>
-                  <td className="px-4 py-2 text-sm text-gray-500">
-                    {file.size}
-                  </td>
-                  <td className="px-4 py-2 text-sm text-gray-500">
-                    {formatDate(file.lastEdited)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {/* Recent Files List */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Files</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ListAssets
+                assets={mockFiles}
+                handleAction={handleAction}
+                handleClickedAsset={handleClickedAsset}
+                mini={true}
+                border={false}
+              />
+            </CardContent>
+          </Card>
         </div>
 
-        <div className="bg-white shadow-md rounded-md p-4 space-y-4">
-          <h3 className="text-xl font-semibold">Capacité de stockage</h3>
-
-          <StoragePieChart />
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <SvgIcon
-                color={fileTypeColors.images}
-                svgContent={docSvg}
-                size="32px"
-              />
-              <span>Images</span>
-              <span>{storageData.fileTypes.images} GB</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <SvgIcon
-                color={fileTypeColors.videos}
-                svgContent={videoSvg}
-                size="32px"
-              />
-              <span>Vidéos</span>
-              <span>{storageData.fileTypes.videos} GB</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <SvgIcon
-                color={fileTypeColors.documents}
-                svgContent={pdfSvg}
-                size="32px"
-              />
-              <span>Documents</span>
-              <span>{storageData.fileTypes.documents} GB</span>
-            </div>
-          </div>
-
-          <h4 className="text-lg font-medium">Derniers dossiers consultés</h4>
-          <ul className="space-y-2">
-            {recentFolders.map((folder, idx) => (
-              <li
-                key={idx}
-                className="text-gray-700 flex items-center justify-between"
-              >
-                <span>{folder}</span>
-                <SvgIcon
-                  color={fileTypeColors.folders}
-                  svgContent={folderSvg}
-                  size="32px"
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Card className="h-fit">
+          <CardHeader>
+            <CardTitle>Storage Usage</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <StoragePieChart />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
-};
-
-export default Dashboard;
+}
