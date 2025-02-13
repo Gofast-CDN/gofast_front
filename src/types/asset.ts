@@ -10,3 +10,4 @@ export interface Asset {
   parentId?: string;
 }
 export type AssetAction = "share" | "download" | "delete";
+export type TrashAssetAction = "restore" | "delete";
