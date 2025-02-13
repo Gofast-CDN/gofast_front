@@ -22,17 +22,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import type { Asset, AssetAction } from "@/types/asset";
+import { cn } from "@/lib/utils";
 
 interface ListAssetsProps {
   assets: Asset[];
   handleAction: (action: AssetAction, fileId: string) => void;
   handleClickedAsset: (asset: Asset) => void;
+  mini?: boolean;
+  border?: boolean;
 }
 
 const ListAssets = ({
   assets,
   handleAction,
   handleClickedAsset,
+  mini = false,
+  border = true,
 }: ListAssetsProps) => {
   const sortedAssets = [...assets].sort((a, b) => {
     if (a.assetType === "folder" && b.assetType !== "folder") return -1;
@@ -41,14 +46,14 @@ const ListAssets = ({
   });
 
   return (
-    <div className="rounded-md border">
+    <div className={cn(border && "border rounded-md")}>
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Asset</TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Size</TableHead>
-            <TableHead>Created</TableHead>
+            {!mini && <TableHead>Created</TableHead>}
             <TableHead>URL</TableHead>
             <TableHead className="w-[50px]"></TableHead>
           </TableRow>
@@ -82,9 +87,11 @@ const ListAssets = ({
               <TableCell className="text-muted-foreground">
                 {asset.size}
               </TableCell>
-              <TableCell className="text-muted-foreground">
-                {new Date(asset.uploadedAt).toLocaleDateString()}
-              </TableCell>
+              {!mini && (
+                <TableCell className="text-muted-foreground">
+                  {new Date(asset.uploadedAt).toLocaleDateString()}
+                </TableCell>
+              )}
               <TableCell className="max-w-[200px]">
                 {asset.assetType === "folder" ? (
                   "-"
