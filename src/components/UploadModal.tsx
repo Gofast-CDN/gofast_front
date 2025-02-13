@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button"; // Import du bouton de shadcn
 
 const UploadModal = () => {
@@ -16,7 +22,10 @@ const UploadModal = () => {
   return (
     <div className="flex flex-col items-center gap-4">
       {/* Bouton qui ouvre la modale */}
-      <Button onClick={() => setOpen(true)} className="bg-blue-600 text-white p-2 rounded-md">
+      <Button
+        onClick={() => setOpen(true)}
+        className="bg-blue-600 text-white p-2 rounded-md"
+      >
         Téléverser
       </Button>
 
@@ -49,27 +58,43 @@ const UploadModal = () => {
                 />
               </svg>
               <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                <span className="font-semibold">Cliquez pour téléverser</span> ou glissez-déposez
+                <span className="font-semibold">Cliquez pour téléverser</span>{" "}
+                ou glissez-déposez
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG ou GIF (MAX. 800x400px)</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                SVG, PNG, JPG ou GIF (MAX. 800x400px)
+              </p>
             </div>
-            <input id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} />
+            <input
+              id="dropzone-file"
+              type="file"
+              className="hidden"
+              onChange={handleFileChange}
+            />
           </label>
 
           {/* Aperçu du fichier sélectionné */}
           {file && (
             <div className="flex flex-col items-center gap-4 mt-4">
               {file.type.startsWith("image/") ? (
-                <img src={URL.createObjectURL(file)} alt="Preview" className="w-40 h-40 object-cover rounded-lg" />
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt="Preview"
+                  className="w-40 h-40 object-cover rounded-lg"
+                />
               ) : (
-                <p className="text-gray-600">Fichier sélectionné : {file?.name}</p>
+                <p className="text-gray-600">
+                  Fichier sélectionné : {file?.name}
+                </p>
               )}
             </div>
           )}
 
           {/* Bouton de fermeture */}
           <DialogClose asChild>
-            <Button className="bg-red-500 text-white px-4 py-2 rounded-lg">Fermer</Button>
+            <Button className="bg-red-500 text-white px-4 py-2 rounded-lg">
+              Fermer
+            </Button>
           </DialogClose>
         </DialogContent>
       </Dialog>

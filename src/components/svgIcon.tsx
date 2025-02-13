@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 const SvgIcon = ({ color, svgContent, size }) => {
-  const [svg, setSvg] = useState('');
+  const [svg, setSvg] = useState("");
 
   useEffect(() => {
     if (svgContent) {
@@ -25,4 +25,3 @@ const SvgIcon = ({ color, svgContent, size }) => {
 };
 
 export default SvgIcon;
-

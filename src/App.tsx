@@ -26,7 +26,8 @@ const queryClient = new QueryClient({
 });
 
 // Lazy-loaded components for public routes only
-const Landing = React.lazy(() => import("./pages/Landing"));
+/* const Landing = React.lazy(() => import("./pages/Landing"));
+ */ const Home = React.lazy(() => import("./pages/Home"));
 const Login = React.lazy(() => import("./pages/Login"));
 const Register = React.lazy(() => import("./pages/Register"));
 const Trash = React.lazy(() => import("./pages/Trash"));
@@ -37,7 +38,7 @@ function App() {
       <Router>
         <AuthProvider>
           <Routes>
-            <Route path="/" element={<Landing />} />
+            <Route path="/" element={<Home />} />
             <Route path="/trash" element={<Trash />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
