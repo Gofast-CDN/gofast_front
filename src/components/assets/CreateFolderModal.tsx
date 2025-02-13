@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FolderIcon } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useCreateFolder } from "@/hooks/useCreateFolder";
 
 const createFolderSchema = z.object({
   name: z
@@ -26,19 +26,15 @@ type CreateFolderForm = z.infer<typeof createFolderSchema>;
 interface CreateFolderModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (name: string) => Promise<void>;
 }
 
-export function CreateFolderModal({
-  isOpen,
-  onClose,
-  onSubmit,
-}: CreateFolderModalProps) {
-  const { toast } = useToast();
+export function CreateFolderModal({ isOpen, onClose }: CreateFolderModalProps) {
+  const { createFolderMutation } = useCreateFolder();
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
   } = useForm<CreateFolderForm>({
     resolver: zodResolver(createFolderSchema),
@@ -49,20 +45,11 @@ export function CreateFolderModal({
 
   const onSubmitForm = async (data: CreateFolderForm) => {
     try {
-      await onSubmit(data.name);
+      await createFolderMutation.mutateAsync(data.name);
       reset();
       onClose();
-      toast({
-        title: "Success",
-        description: "Folder created successfully",
-      });
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Error",
-        description: "Failed to create folder",
-        variant: "destructive",
-      });
+    } catch {
+      // Error handling is done in the mutation
     }
   };
 
@@ -91,12 +78,12 @@ export function CreateFolderModal({
               type="button"
               variant="outline"
               onClick={onClose}
-              disabled={isSubmitting}
+              disabled={createFolderMutation.isPending}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Creating..." : "Create"}
+            <Button type="submit" disabled={createFolderMutation.isPending}>
+              {createFolderMutation.isPending ? "Creating..." : "Create"}
             </Button>
           </DialogFooter>
         </form>

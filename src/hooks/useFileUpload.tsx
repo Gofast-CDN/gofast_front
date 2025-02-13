@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { uploadService, UploadError } from "@/lib/upload";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "./auth/AuthContext";
+import { useAssetLocation } from "./useAssetLocation";
 
 interface UseFileUploadOptions {
   onSuccess?: (url: string) => void;
@@ -9,7 +11,13 @@ interface UseFileUploadOptions {
 
 export function useFileUpload(options: UseFileUploadOptions = {}) {
   const [isUploading, setIsUploading] = useState(false);
+  const { user } = useAuth();
+  const { containerName } = useAssetLocation();
   const { toast } = useToast();
+
+  if (!user) {
+    throw new Error("User is required");
+  }
 
   const upload = async (file: File | string) => {
     if (typeof file === "string") {
@@ -22,19 +30,21 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
 
     setIsUploading(true);
     try {
-      const result = await uploadService.uploadFile(file, {
-        onProgress: (progress) => {
-          console.log(`Upload progress: ${progress}%`);
-        },
-      });
+      const result = await uploadService.uploadFile(
+        file,
+        containerName,
+        user.id,
+        {
+          onProgress: (progress) => {
+            console.log(`Upload progress: ${progress}%`);
+          },
+        }
+      );
 
       toast({
         title: "Success",
-        description: `Uploaded ${result.fileName}`,
+        description: result.message,
       });
-
-      options.onSuccess?.(result.url);
-      return result.url;
     } catch (error) {
       const message =
         error instanceof UploadError

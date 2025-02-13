@@ -1,3 +1,5 @@
+import { config } from "./config";
+
 // Types for upload service
 interface UploadOptions {
   endpoint?: string;
@@ -7,11 +9,7 @@ interface UploadOptions {
 }
 
 interface UploadResponse {
-  url: string;
-  fileName: string;
-  fileType: string;
-  fileSize: number;
-  uploadedAt: string;
+  message: string;
 }
 
 export class UploadError extends Error {
@@ -27,7 +25,7 @@ export class UploadError extends Error {
 
 class UploadService {
   private readonly defaultOptions: Required<UploadOptions> = {
-    endpoint: "https://storage.gofast.dev/upload",
+    endpoint: `${config.BASE_URL}/assets`,
     timeout: 30000, // 30 seconds
     headers: {
       Accept: "application/json",
@@ -79,6 +77,8 @@ class UploadService {
 
   async uploadFile(
     file: File,
+    containerName: string,
+    userId: string,
     options?: Partial<UploadOptions>
   ): Promise<UploadResponse> {
     const opts: Required<UploadOptions> = {
@@ -95,9 +95,9 @@ class UploadService {
 
     // Add file and metadata to FormData
     formData.append("file", file);
-    formData.append("fileName", file.name);
-    formData.append("fileType", file.type);
-    formData.append("fileSize", file.size.toString());
+    formData.append("containerName", containerName);
+    formData.append("blobName", file.name);
+    formData.append("id", userId);
 
     try {
       const response = await this.uploadWithProgress(formData, opts);
@@ -109,17 +109,10 @@ class UploadService {
           response.status
         );
       }
-
-      // Mock response for now
-      const mockResponse: UploadResponse = {
-        url: `https://storage.gofast.dev/files/${file.name}`,
-        fileName: file.name,
-        fileType: file.type,
-        fileSize: file.size,
-        uploadedAt: new Date().toISOString(),
-      };
-
-      return mockResponse;
+      const responseData = await response.json();
+      return {
+        message: responseData.message,
+      } as UploadResponse;
     } catch (error) {
       if (error instanceof UploadError) {
         throw error;
