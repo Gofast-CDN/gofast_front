@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"; // Import useLocation
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom"; // Import useLocation
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { FetchOptions, httpClient } from "./lib/http-client";
@@ -7,11 +12,6 @@ import DashboardRouter from "./routing/DashboardRouter";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routing/ProtectedRoute";
 import { AuthProvider } from "./hooks/auth/AuthContext";
-import Home from "./pages/Home"; // Page d'accueil
-import CaptchaPage from "./pages/CaptchaPage"; // Page CAPTCHA
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Trash from "./pages/Trash";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,9 +30,17 @@ const queryClient = new QueryClient({
   },
 });
 
+const Home = React.lazy(() => import("./pages/Home"));
+const Login = React.lazy(() => import("./pages/Login"));
+const Register = React.lazy(() => import("./pages/Register"));
+const Trash = React.lazy(() => import("./pages/Trash"));
+const CaptchaPage = React.lazy(() => import("./pages/CaptchaPage"));
+
 // App component that handles routes and context
 function App() {
-  const [isCaptchaVerified, setIsCaptchaVerified] = useState<boolean | null>(null); // Change state type to `null | boolean`
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState<boolean | null>(
+    null
+  ); // Change state type to `null | boolean`
 
   // Vérifie l'état du CAPTCHA à chaque chargement de page
   useEffect(() => {
@@ -58,7 +66,10 @@ function App() {
             {/* Si le CAPTCHA n'est pas validé, redirige vers la page CAPTCHA */}
             {!isCaptchaVerified ? (
               <>
-                <Route path="/captcha" element={<CaptchaPage setIsVerified={setIsCaptchaVerified} />} />
+                <Route
+                  path="/captcha"
+                  element={<CaptchaPage setIsVerified={setIsCaptchaVerified} />}
+                />
                 <Route path="*" element={<Navigate to="/captcha" />} />
               </>
             ) : (
