@@ -7,11 +7,6 @@ import DashboardRouter from "./routing/DashboardRouter";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routing/ProtectedRoute";
 import { AuthProvider } from "./hooks/auth/AuthContext";
-import Home from "./pages/Home"; // Page d'accueil
-import CaptchaPage from "./pages/CaptchaPage"; // Page CAPTCHA
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Trash from "./pages/Trash";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,7 +25,15 @@ const queryClient = new QueryClient({
   },
 });
 
-// App component that handles routes and context
+// Lazy-loaded components for public routes only
+/* const Landing = React.lazy(() => import("./pages/Landing"));
+ */
+const Login = React.lazy(() => import("./pages/Login"));
+const Register = React.lazy(() => import("./pages/Register"));
+const Home = React.lazy(() => import("./pages/Home"));
+const Trash = React.lazy(() => import("./pages/Trash"));
+const CaptchaPage = React.lazy(() => import("./pages/CaptchaPage"));
+
 function App() {
   const [isCaptchaVerified, setIsCaptchaVerified] = useState<boolean | null>(null); // Change state type to `null | boolean`
 
@@ -50,7 +53,6 @@ function App() {
       <Router>
         <AuthProvider>
           <Routes>
-            {/* Routes publiques */}
             <Route path="/trash" element={<Trash />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
