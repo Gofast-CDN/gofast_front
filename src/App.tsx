@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"; // Import useLocation
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { FetchOptions, httpClient } from "./lib/http-client";
@@ -30,18 +30,23 @@ const queryClient = new QueryClient({
   },
 });
 
+// App component that handles routes and context
 function App() {
-  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState<boolean | null>(null); // Change state type to `null | boolean`
 
-  // Vérification de l'état du CAPTCHA au chargement du composant
+  // Vérifie l'état du CAPTCHA à chaque chargement de page
   useEffect(() => {
     const isVerified = localStorage.getItem("recaptcha_verified") === "true";
     setIsCaptchaVerified(isVerified);
   }, []);
 
+  // Si `isCaptchaVerified` est `null`, on affiche rien jusqu'à ce que la vérification se fasse
+  if (isCaptchaVerified === null) {
+    return null; // ou un indicateur de chargement, si tu préfères
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Le Router englobe tout */}
       <Router>
         <AuthProvider>
           <Routes>
@@ -54,13 +59,7 @@ function App() {
             {!isCaptchaVerified ? (
               <>
                 <Route path="/captcha" element={<CaptchaPage setIsVerified={setIsCaptchaVerified} />} />
-                {/* Redirection vers la page CAPTCHA pour toute autre route */}
-                <Route
-  path="*"
-  element={<Navigate to="/captcha" state={{ from: location.pathname }} />}
-/>
-
-
+                <Route path="*" element={<Navigate to="/captcha" />} />
               </>
             ) : (
               <>

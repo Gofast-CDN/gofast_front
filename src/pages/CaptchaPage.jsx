@@ -26,8 +26,8 @@ export default function CaptchaPage({ setIsVerified }) {
         localStorage.setItem("recaptcha_verified", "true");
         setIsVerified(true);
 
-        // Rediriger l'utilisateur vers la page précédente ou la page d'accueil par défaut
-        const from = location.state?.from || "/";
+        // Redirige l'utilisateur vers la page de login ou la page précédente s'il en vient
+        const from = location.state?.from || "/login"; // Redirige vers /login si aucune page précédente
         navigate(from, { replace: true });
       } else {
         alert("Échec de la validation reCAPTCHA.");
