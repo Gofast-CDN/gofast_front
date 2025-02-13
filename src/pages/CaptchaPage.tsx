@@ -2,13 +2,17 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 
-export default function CaptchaPage({ setIsVerified }) {
+interface CaptchaPageProps {
+  setIsVerified: (isVerified: boolean) => void;
+}
+
+export default function CaptchaPage({ setIsVerified }: CaptchaPageProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const recaptchaRef = React.useRef();
+  const recaptchaRef = React.useRef<ReCAPTCHA | null>(null);
 
   const handleVerification = async () => {
-    const token = recaptchaRef.current.getValue();
+    const token = recaptchaRef.current ? recaptchaRef.current.getValue() : null;
     if (!token) {
       alert("Veuillez valider le reCAPTCHA pour continuer.");
       return;
