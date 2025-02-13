@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,12 +10,12 @@ import { Button } from "@/components/ui/button"; // Import du bouton de shadcn
 
 const UploadModal = () => {
   const [open, setOpen] = useState(false);
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]; // Utilisation de l'optional chaining
+    if (file) {
+      setFile(file);
     }
   };
 
@@ -84,7 +84,8 @@ const UploadModal = () => {
                 />
               ) : (
                 <p className="text-gray-600">
-                  Fichier sélectionné : {file?.name}
+                  Fichier sélectionné :{" "}
+                  {file?.name || "Aucun fichier sélectionné"}
                 </p>
               )}
             </div>
