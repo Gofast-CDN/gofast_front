@@ -172,10 +172,6 @@ const SpaceLayout = () => {
       <CreateFolderModal
         isOpen={isCreateFolderModalOpen}
         onClose={() => setIsCreateFolderModalOpen(false)}
-        onSubmit={async (name) => {
-          console.log("Creating folder:", name);
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        }}
       />
     </ContextMenu>
   );
