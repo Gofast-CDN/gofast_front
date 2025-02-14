@@ -1,50 +1,86 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# GoFast - Secure File Storage Platform
 
-Currently, two official plugins are available:
+GoFast is a modern web application for secure file storage and sharing, built with a focus on security and user experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
 
-## Expanding the ESLint configuration
+### Frontend
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- React 18 with TypeScript
+- Vite for build tooling and development
+- TanStack Query for server state management
+- Tailwind CSS for styling
+- Shadcn/UI for component library
 
-- Configure the top-level `parserOptions` property like this:
+### Security & Authentication
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- JWT-based authentication
+- reCAPTCHA integration
+- Protected routes
+
+## Features
+
+### Authentication & Security
+
+- User registration and login
+- reCAPTCHA verification for enhanced security
+- JWT token-based session management
+
+### File Management
+
+- File upload and storage
+- Folder creation and organization
+- Recent files tracking
+- File preview support
+- File sharing capabilities
+
+### User Interface
+
+- Dark/Light theme support
+- Responsive design
+- Drag and drop file upload
+- File progress tracking
+- Toast notifications for user feedback
+
+### Storage Features
+
+- File size tracking
+- File type recognition
+- Hierarchical folder structure
+- Recent files quick access
+- Trash bin for deleted files
+
+## Getting Started
+
+1. Clone the repository
+2. Install dependencies:
+
+```sh
+npm install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+3. Set up environment variables in .env:
+```sh
+VITE_GOFAST_API_BASE_URL=http://localhost:80/api/v1
 ```
+4. Start the development server:
+```
+npm run dev
+```
+
+## Project Structure
+components - Reusable UI components
+hooks - Custom React hooks for business logic
+pages - Main application pages
+lib - Utility functions and services
+types - TypeScript type definitions
+layouts - Page layout components
+
+## Environment Setup
+The project requires:
+
+1. Node.js 18+
+2. npm 10+
+3. Modern web browser
+4. Backend API running (separate repository)
