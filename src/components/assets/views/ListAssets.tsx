@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import {
   Download,
+  FileIcon,
   FolderIcon,
   MoreHorizontal,
   Share2,
@@ -23,6 +24,7 @@ import {
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import type { Asset, AssetAction } from "@/types/asset";
 import { cn } from "@/lib/utils";
+import { thumbnailTypes } from "./thumbnailTypes";
 
 interface ListAssetsProps {
   assets: Asset[];
@@ -71,12 +73,16 @@ const ListAssets = ({
                     <div className="h-10 w-10 rounded bg-muted flex items-center justify-center">
                       <FolderIcon className="h-6 w-6 text-muted-foreground" />
                     </div>
-                  ) : (
+                  ) : thumbnailTypes.includes(asset.assetType) ? (
                     <img
                       src={asset.thumbnail}
                       alt={asset.name}
                       className="h-10 w-10 rounded object-cover bg-muted"
                     />
+                  ) : (
+                    <div className="h-10 w-10 rounded bg-muted flex items-center justify-center">
+                      <FileIcon className="h-6 w-6 text-muted-foreground" />
+                    </div>
                   )}
                   <span className="font-medium">{asset.name}</span>
                 </div>
