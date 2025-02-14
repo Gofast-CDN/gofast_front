@@ -64,7 +64,13 @@ export default function AssetDetailsDialog({
               <DialogTitle className="text-secondary bg-primary/50 px-4 py-2 rounded-lg">
                 {selectedAsset?.name}
               </DialogTitle>
-              <Button size="sm" variant="secondary" onClick={handleDownload} disabled={isDownloading}>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={handleDownload}
+                disabled={isDownloading}
+              >
+
                 <Download className="h-4 w-4 mr-2" />
                 {isDownloading ? "Downloading..." : "Download"}
               </Button>
