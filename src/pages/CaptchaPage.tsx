@@ -8,18 +8,16 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useCaptcha } from "@/hooks/captcha/useCaptcha";
 
-interface CaptchaPageProps {
-  setIsVerified: (isVerified: boolean) => void;
-}
-
-export default function CaptchaPage({ setIsVerified }: CaptchaPageProps) {
+export default function CaptchaPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { setVerified } = useCaptcha();
   const recaptchaRef = React.useRef<ReCAPTCHA | null>(null);
 
   const handleVerification = async () => {
-    const token = recaptchaRef.current ? recaptchaRef.current.getValue() : null;
+    const token = recaptchaRef.current?.getValue();
     if (!token) {
       alert("Veuillez valider le reCAPTCHA pour continuer.");
       return;
@@ -37,12 +35,8 @@ export default function CaptchaPage({ setIsVerified }: CaptchaPageProps) {
 
       const result = await response.json();
       if (result.success) {
-        localStorage.setItem("recaptcha_verified", "true");
-        setIsVerified(true);
-
-        // Redirige l'utilisateur vers la page de login ou la page précédente s'il en vient
-        const from = location.state?.from || "/login"; // Redirige vers /login si aucune page précédente
-        // Utilisation de void pour éviter les erreurs de promesses flottantes
+        setVerified(true);
+        const from = location.state?.from || "/login";
         void navigate(from, { replace: true });
       } else {
         alert("Échec de la validation reCAPTCHA.");

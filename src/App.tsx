@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom"; // Import useLocation
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Import useLocation
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { FetchOptions, httpClient } from "./lib/http-client";
@@ -12,6 +7,8 @@ import DashboardRouter from "./routing/DashboardRouter";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routing/ProtectedRoute";
 import { AuthProvider } from "./hooks/auth/AuthContext";
+import { CaptchaProvider } from "@/hooks/captcha/CaptchaContext";
+import { CaptchaGuard } from "./components/guards/CaptchaGuard";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -56,45 +53,38 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <AuthProvider>
-          <Routes>
-            {/* Routes publiques */}
-            <Route path="/trash" element={<Trash />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+        <CaptchaProvider>
+          <AuthProvider>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/trash" element={<Trash />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/captcha" element={<CaptchaPage />} />
 
-            {/* Si le CAPTCHA n'est pas validé, redirige vers la page CAPTCHA */}
-            {!isCaptchaVerified ? (
-              <>
-                <Route
-                  path="/captcha"
-                  element={<CaptchaPage setIsVerified={setIsCaptchaVerified} />}
-                />
-                <Route path="*" element={<Navigate to="/captcha" />} />
-              </>
-            ) : (
-              <>
-                {/* Routes protégées */}
-                <Route path="/" element={<Home />} />
-                <Route
-                  path="/:userId/*"
-                  element={
-                    isCaptchaVerified ? (
-                      <ProtectedRoute>
-                        <DashboardRouter />
-                      </ProtectedRoute>
-                    ) : (
-                      <Navigate to="/captcha" />
-                    )
-                  }
-                />
-              </>
-            )}
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/:userId/*"
+                element={
+                  <CaptchaGuard>
+                    <ProtectedRoute>
+                      <DashboardRouter />
+                    </ProtectedRoute>
+                  </CaptchaGuard>
+                }
+              />
 
-            {/* Page non trouvée */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthProvider>
+        </CaptchaProvider>
       </Router>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
