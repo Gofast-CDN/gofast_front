@@ -1,38 +1,30 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { httpClient } from "@/lib/http-client";
-import { useAuth } from "../auth/AuthContext";
 import { useAssetLocation } from "./useAssetLocation";
 import { toast } from "@/hooks/use-toast";
 
 interface CreateFolderPayload {
-  name: string;
+  containerName: string;
   containerId: string;
-  userId: string;
 }
 
 interface CreateFolderResponse {
   id: string;
-  name: string;
+  containerName: string;
   createdAt: string;
   message: string;
 }
 
 export function useCreateFolder() {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
   const { containerId } = useAssetLocation();
 
   const createFolderMutation = useMutation({
     mutationKey: ["createFolder"],
-    mutationFn: (name: string) => {
-      if (!user) {
-        throw new Error("User is required");
-      }
-
+    mutationFn: (containerName: string) => {
       const payload: CreateFolderPayload = {
-        name,
+        containerName,
         containerId,
-        userId: user.id,
       };
 
       return httpClient<CreateFolderResponse>("/assets/folder", {
@@ -48,7 +40,7 @@ export function useCreateFolder() {
 
       toast({
         title: "Success",
-        description: `Folder ${data.name} created successfully!`,
+        description: `Folder ${data.containerName} created successfully!`,
       });
     },
     onError: (error: Error) => {
