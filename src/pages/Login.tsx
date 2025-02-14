@@ -9,7 +9,7 @@ import { LoginCredentials } from "@/types/auth";
 import { useAuth } from "@/hooks/auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const image = "/login_picture.jpeg";
+const image = "/gofast_login.jpeg";
 
 type FormErrors = Record<string, { message?: string }>;
 
