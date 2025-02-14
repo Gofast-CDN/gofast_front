@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { cn } from "@/lib/utils";
 import SharedLink from "../ui/sharedLink";
 import { thumbnailTypes } from "./views/thumbnailTypes";
+import { useState } from "react";
 
 interface AssetDetailsDialogProps {
   selectedAsset: Asset | null;
@@ -15,6 +16,32 @@ export default function AssetDetailsDialog({
   selectedAsset,
   onClose,
 }: AssetDetailsDialogProps) {
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    if (!selectedAsset?.url) return;
+
+    setIsDownloading(true);
+    try {
+      const response = await fetch(selectedAsset.url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = selectedAsset.name || "downloaded-file"; // Nom du fichier téléchargé
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Erreur lors du téléchargement :", error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   if (!selectedAsset) return null;
 
   return (
@@ -37,9 +64,9 @@ export default function AssetDetailsDialog({
               <DialogTitle className="text-secondary bg-primary/50 px-4 py-2 rounded-lg">
                 {selectedAsset?.name}
               </DialogTitle>
-              <Button size="sm" variant="secondary">
+              <Button size="sm" variant="secondary" onClick={handleDownload} disabled={isDownloading}>
                 <Download className="h-4 w-4 mr-2" />
-                Download
+                {isDownloading ? "Downloading..." : "Download"}
               </Button>
             </div>
           </div>
