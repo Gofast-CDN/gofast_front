@@ -1,3 +1,8 @@
+interface PathInfo {
+  containerId: string;
+  containerName: string;
+}
+
 export interface Asset {
   id: string;
   name: string;
@@ -8,6 +13,10 @@ export interface Asset {
   thumbnail?: string;
   assetType: string;
   parentId?: string;
+  path?: string;
+  depth?: number;
+  pathInfo?: PathInfo[];
 }
+
 export type AssetAction = "share" | "download" | "delete";
 export type TrashAssetAction = "restore" | "delete";

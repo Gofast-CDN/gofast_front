@@ -3,6 +3,11 @@ import { httpClient } from "@/lib/http-client";
 import { Asset } from "@/types/asset";
 import { useAssetLocation } from "./useAssetLocation";
 
+interface PathInfo {
+  containerId: string;
+  containerName: string;
+}
+
 interface APIAsset {
   id: string;
   created_at: string;
@@ -15,6 +20,8 @@ interface APIAsset {
   path: string;
   parentId?: string;
   childs?: APIAsset[];
+  depth?: number;
+  pathInfo?: PathInfo[];
 }
 
 const mapAPIAssetToAsset = (apiAsset: APIAsset): Asset => ({
@@ -30,6 +37,9 @@ const mapAPIAssetToAsset = (apiAsset: APIAsset): Asset => ({
       ? "folder"
       : (apiAsset.name.split(".").pop() ?? "unknown"),
   parentId: apiAsset.parentId,
+  path: apiAsset.path,
+  depth: apiAsset.depth,
+  pathInfo: apiAsset.pathInfo,
 });
 
 export function useAssetsQuery() {
