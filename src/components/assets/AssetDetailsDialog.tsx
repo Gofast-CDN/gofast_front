@@ -70,7 +70,6 @@ export default function AssetDetailsDialog({
                 onClick={handleDownload}
                 disabled={isDownloading}
               >
-
                 <Download className="h-4 w-4 mr-2" />
                 {isDownloading ? "Downloading..." : "Download"}
               </Button>
