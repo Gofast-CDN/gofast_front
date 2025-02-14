@@ -23,7 +23,7 @@ export function useAssetsRecentFolder() {
   const { containerId } = useAssetLocation();
 
   return useQuery({
-    queryKey: ["recentFolders", containerId],
+    queryKey: ["assets", "recent", containerId],
     queryFn: async () => {
       const response = await httpClient<APIAsset[]>("/assets/folder/recent", {
         method: "GET",

@@ -34,8 +34,15 @@ export function useCreateFolder() {
       });
     },
     onSuccess: async (data) => {
+      // Invalidate specific folder query
       await queryClient.invalidateQueries({
         queryKey: ["assets", containerId],
+      });
+
+      // Invalidate all recent folders queries by using partial key match
+      await queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === "assets" && query.queryKey[1] === "recent",
       });
 
       toast({
