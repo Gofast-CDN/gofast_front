@@ -4,37 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ListAssets from "@/components/assets/views/ListAssets";
 import type { Asset } from "@/types/asset";
-import { FolderIcon } from "lucide-react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { SpaceContextType } from "@/layouts/SpaceLayout";
 import { StoragePieChart } from "@/components/charts/StoragePieChart";
-
-const mockFolders: Asset[] = [
-  {
-    id: "1",
-    name: "Documents",
-    size: "9 KB",
-    owner: "John Doe",
-    uploadedAt: "2024-02-10T14:30:00Z",
-    assetType: "folder",
-  },
-  {
-    id: "2",
-    name: "Images",
-    size: "15 MB",
-    owner: "John Doe",
-    uploadedAt: "2024-02-09T14:30:00Z",
-    assetType: "folder",
-  },
-  {
-    id: "3",
-    name: "Projects",
-    size: "24 MB",
-    owner: "John Doe",
-    uploadedAt: "2024-02-08T14:30:00Z",
-    assetType: "folder",
-  },
-];
+import AssetsRecentFolder from "@/components/home/AssetsRecentFolder";
 
 const mockFiles: Asset[] = [
   {
@@ -133,37 +106,7 @@ export default function Home() {
 
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-2 space-y-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Recent Folders</CardTitle>
-              <Button variant="ghost" size="sm">
-                View all
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-4">
-                {mockFolders.map((folder) => (
-                  <Card
-                    key={folder.id}
-                    className="cursor-pointer hover:bg-accent transition-colors p-4"
-                    onClick={() => handleClickedAsset(folder)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded bg-muted flex items-center justify-center">
-                        <FolderIcon className="h-6 w-6 text-muted-foreground" />
-                      </div>
-                      <div className="space-y-1">
-                        <h3 className="font-medium text-sm">{folder.name}</h3>
-                        <p className="text-xs text-muted-foreground">
-                          {folder.size}
-                        </p>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <AssetsRecentFolder handleClickedAsset={handleClickedAsset} />
 
           <Card>
             <CardHeader>
