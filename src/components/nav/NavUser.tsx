@@ -45,7 +45,7 @@ export function NavUser() {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{displayName}</span>
-                <span className="truncate text-xs">john.doe@gmail.com</span>
+                <span className="truncate text-xs">{user.email}</span>
               </div>
               <ChevronRight className="ml-auto size-4" />
             </SidebarMenuButton>
