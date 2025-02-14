@@ -4,4 +4,9 @@ export const thumbnailTypes = [
   "image/jpg",
   "image/gif",
   "image/webp",
+  "jpeg",
+  "jpg",
+  "gif",
+  "webp",
+  "png",
 ];
