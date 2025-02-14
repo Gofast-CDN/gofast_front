@@ -5,6 +5,7 @@ import GridAssets from "@/components/assets/views/GridAssets";
 import { useNavigate } from "react-router-dom";
 import { Asset } from "@/types/asset";
 import { useAssetsQuery } from "@/hooks/assets/useAssetsQuery";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MySpace() {
   const navigate = useNavigate();
@@ -23,7 +24,11 @@ export default function MySpace() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <Skeleton className="h-16 w-full" />
+      </>
+    );
   }
 
   if (error) {
@@ -33,8 +38,6 @@ export default function MySpace() {
   if (!data) {
     return <div>No assets found</div>;
   }
-
-  console.log("assets", data);
 
   if (viewMode === "list") {
     return (
