@@ -6,7 +6,7 @@ import {
 import { FolderPlus, FileUp, FolderUp } from "lucide-react";
 import { useState } from "react";
 import { UploadFileModal } from "./UploadFileModal";
-import { useFileUpload } from "@/hooks/useFileUpload";
+import { useFileUpload } from "@/hooks/assets/useFileUpload";
 
 interface AssetsContextMenuActionProps {
   setIsCreateFolderModalOpen: (isOpen: boolean) => void;

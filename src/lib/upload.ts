@@ -1,4 +1,5 @@
 import { config } from "./config";
+import { getCookie } from "./utils/cookies";
 
 // Types for upload service
 interface UploadOptions {
@@ -29,6 +30,7 @@ class UploadService {
     timeout: 30000, // 30 seconds
     headers: {
       Accept: "application/json",
+      Authorization: `Bearer ${getCookie("token")}`,
     },
     onProgress: () => {},
   };

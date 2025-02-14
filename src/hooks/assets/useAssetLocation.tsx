@@ -3,7 +3,7 @@ import { useLocation, useParams } from "react-router-dom";
 interface AssetLocation {
   containerName: string;
   isMySpace: boolean;
-  currentFolderId: string | null;
+  currentFolderId: string;
 }
 
 export function useAssetLocation(): AssetLocation {
@@ -22,7 +22,7 @@ export function useAssetLocation(): AssetLocation {
   const currentFolderId =
     mySpaceIndex !== -1 && pathSegments[mySpaceIndex + 1]
       ? pathSegments[mySpaceIndex + 1]
-      : null;
+      : "";
 
   return {
     containerName:

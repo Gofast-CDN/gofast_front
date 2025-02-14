@@ -1,0 +1,75 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { uploadService, UploadError } from "@/lib/upload";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "../auth/AuthContext";
+import { useAssetLocation } from "./useAssetLocation";
+
+interface UseFileUploadOptions {
+  onSuccess?: () => void;
+  onError?: (error: Error) => void;
+}
+
+export function useFileUpload(options: UseFileUploadOptions = {}) {
+  const { user } = useAuth();
+  const { containerName } = useAssetLocation();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const uploadMutation = useMutation({
+    mutationFn: async (file: File) => {
+      if (!user) {
+        throw new Error("User is required");
+      }
+
+      return await uploadService.uploadFile(file, containerName, user.id, {
+        onProgress: (progress) => {
+          console.log(`Upload progress: ${progress}%`);
+        },
+      });
+    },
+    onSuccess: async (data) => {
+      toast({
+        title: "Success",
+        description: data.message,
+      });
+
+      // Invalidate and refetch assets
+      await queryClient.invalidateQueries({
+        queryKey: ["assets", containerName],
+      });
+
+      options.onSuccess?.();
+    },
+    onError: (error: Error) => {
+      const message =
+        error instanceof UploadError
+          ? error.message
+          : "An unexpected error occurred";
+
+      toast({
+        title: "Upload Error",
+        description: message,
+        variant: "destructive",
+      });
+
+      options.onError?.(error);
+    },
+  });
+
+  const upload = async (file: File | string) => {
+    if (typeof file === "string") {
+      toast({
+        title: "URL Upload",
+        description: "URL upload not implemented yet",
+      });
+      return;
+    }
+
+    await uploadMutation.mutateAsync(file);
+  };
+
+  return {
+    upload,
+    isUploading: uploadMutation.isPending,
+  };
+}
