@@ -23,7 +23,9 @@ export function useAuthMutation() {
       }),
     onSuccess: (data) => {
       auth.login(data);
-
+      if (data.userId) {
+        void navigate(`/${data.userId}`);
+      }
       toast({
         title: data.message,
         description: `Welcome back, ${data.email}!`,

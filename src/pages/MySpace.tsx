@@ -6,14 +6,23 @@ import { useNavigate } from "react-router-dom";
 import { Asset } from "@/types/asset";
 import { useAssetsQuery } from "@/hooks/assets/useAssetsQuery";
 import { Skeleton } from "@/components/ui/skeleton";
+import SpaceHeader from "@/components/sections/SectionHeader";
+import { useEffect, useState } from "react";
 
 export default function MySpace() {
   const navigate = useNavigate();
   const { userId } = useParams();
-  const { viewMode, setSelectedAsset, handleAction } =
+  const { setSelectedAsset, handleAction } =
     useOutletContext<SpaceContextType>();
-
   const { data, isLoading, error } = useAssetsQuery();
+  const [viewMode, setViewMode] = useState<"list" | "grid">(() => {
+    const savedMode = localStorage.getItem("gofast_view_mode_preference");
+    return savedMode === "list" || savedMode === "grid" ? savedMode : "list";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("gofast_view_mode_preference", viewMode);
+  }, [viewMode]);
 
   const handleClickedAsset = (asset: Asset) => {
     if (asset.assetType === "folder") {
@@ -23,37 +32,25 @@ export default function MySpace() {
     setSelectedAsset(asset);
   };
 
-  if (isLoading) {
-    return (
-      <>
-        <Skeleton className="h-16 w-full" />
-      </>
-    );
-  }
+  if (isLoading) return <Skeleton className="h-16 w-full" />;
+  if (error) return <div>Error loading assets</div>;
+  if (!data) return <div>No assets found</div>;
 
-  if (error) {
-    return <div>Error loading assets</div>;
-  }
+  const Content = viewMode === "list" ? ListAssets : GridAssets;
 
-  if (!data) {
-    return <div>No assets found</div>;
-  }
-
-  if (viewMode === "list") {
-    return (
-      <ListAssets
+  return (
+    <div className="space-y-6">
+      <SpaceHeader
+        userId={userId!}
+        pathInfo={data.rootFolder?.pathInfo}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+      />
+      <Content
         assets={data.assets}
         handleAction={handleAction}
         handleClickedAsset={handleClickedAsset}
       />
-    );
-  }
-
-  return (
-    <GridAssets
-      assets={data.assets}
-      handleAction={handleAction}
-      handleClickedAsset={handleClickedAsset}
-    />
+    </div>
   );
 }
