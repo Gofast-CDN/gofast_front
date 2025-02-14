@@ -33,10 +33,10 @@ const mapAPIAssetToAsset = (apiAsset: APIAsset): Asset => ({
 });
 
 export function useAssetsQuery() {
-  const { currentFolderId, containerName } = useAssetLocation();
+  const { currentFolderId, containerId } = useAssetLocation();
 
   return useQuery({
-    queryKey: ["assets", containerName],
+    queryKey: ["assets", containerId],
     queryFn: async () => {
       const endpoint = currentFolderId
         ? `/assets/${currentFolderId}`

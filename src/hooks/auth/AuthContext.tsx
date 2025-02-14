@@ -14,6 +14,7 @@ interface AuthContextType {
   login: (data: AuthResponse) => void;
   logout: () => void;
   hasAccess: (requestedUserId: string) => boolean;
+  rootContainerId: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -74,6 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         logout,
         hasAccess,
+        rootContainerId: user?.rootContainerID || null,
       }}
     >
       {children}

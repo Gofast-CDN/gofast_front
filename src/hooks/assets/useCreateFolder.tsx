@@ -6,7 +6,7 @@ import { toast } from "@/hooks/use-toast";
 
 interface CreateFolderPayload {
   name: string;
-  containerName: string;
+  containerId: string;
   userId: string;
 }
 
@@ -20,7 +20,7 @@ interface CreateFolderResponse {
 export function useCreateFolder() {
   const queryClient = useQueryClient();
   const { user } = useAuth();
-  const { containerName } = useAssetLocation();
+  const { containerId } = useAssetLocation();
 
   const createFolderMutation = useMutation({
     mutationKey: ["createFolder"],
@@ -31,7 +31,7 @@ export function useCreateFolder() {
 
       const payload: CreateFolderPayload = {
         name,
-        containerName,
+        containerId,
         userId: user.id,
       };
 
@@ -43,7 +43,7 @@ export function useCreateFolder() {
     },
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({
-        queryKey: ["assets", containerName],
+        queryKey: ["assets", containerId],
       });
 
       toast({

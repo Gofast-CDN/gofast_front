@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { uploadService, UploadError } from "@/lib/upload";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "../auth/AuthContext";
 import { useAssetLocation } from "./useAssetLocation";
 
 interface UseFileUploadOptions {
@@ -10,18 +9,13 @@ interface UseFileUploadOptions {
 }
 
 export function useFileUpload(options: UseFileUploadOptions = {}) {
-  const { user } = useAuth();
-  const { containerName } = useAssetLocation();
+  const { containerId } = useAssetLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
-      if (!user) {
-        throw new Error("User is required");
-      }
-
-      return await uploadService.uploadFile(file, containerName, user.id, {
+      return await uploadService.uploadFile(file, containerId, {
         onProgress: (progress) => {
           console.log(`Upload progress: ${progress}%`);
         },
@@ -35,7 +29,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
 
       // Invalidate and refetch assets
       await queryClient.invalidateQueries({
-        queryKey: ["assets", containerName],
+        queryKey: ["assets", containerId],
       });
 
       options.onSuccess?.();
