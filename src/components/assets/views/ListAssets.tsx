@@ -115,6 +115,7 @@ const ListAssets = ({
                       className="text-blue-600 hover:underline truncate block"
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       {asset.url}
                     </a>
