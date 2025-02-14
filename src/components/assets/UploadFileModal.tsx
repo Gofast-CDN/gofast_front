@@ -77,16 +77,6 @@ export function UploadFileModal({
       await onSubmit(selectedFile);
       setSelectedFile(null);
       onClose();
-      toast({
-        title: "Success",
-        description: `File ${selectedFile.name} uploaded successfully`,
-      });
-    } catch {
-      toast({
-        title: "Error",
-        description: "Failed to upload file",
-        variant: "destructive",
-      });
     } finally {
       setIsSubmitting(false);
     }

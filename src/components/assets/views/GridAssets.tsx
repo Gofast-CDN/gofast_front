@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { thumbnailTypes } from "./thumbnailTypes";
 
 interface GridAssetsProps {
   assets: Asset[];
@@ -65,6 +66,11 @@ export default function GridAssets({
         </div>
       )}
 
+      {files.length === 0 && (
+        <div className="text-muted-foreground text-center col-span-full">
+          No files found
+        </div>
+      )}
       {files.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center gap-4">
@@ -82,11 +88,17 @@ export default function GridAssets({
                 onClick={() => handleClickedAsset(file)}
               >
                 <div className="aspect-video w-full relative">
-                  <img
-                    src={file.thumbnail}
-                    alt={file.name}
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
+                  {thumbnailTypes.includes(file.assetType) ? (
+                    <img
+                      src={file.thumbnail}
+                      alt={file.name}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 h-full w-full bg-gray-300 flex items-center justify-center">
+                      <FileIcon className="h-20 w-20 text-muted-foreground" />
+                    </div>
+                  )}
                   <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

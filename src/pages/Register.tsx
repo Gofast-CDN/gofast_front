@@ -9,7 +9,7 @@ import type { RegisterCredentials } from "@/types/auth";
 import { useAuth } from "@/hooks/auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const image = "/register_picture.png";
+const image = "/gofast_register.jpeg";
 
 type FormErrors = Record<string, { message?: string }>;
 

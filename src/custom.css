@@ -1,0 +1,38 @@
+
+.folder-icon {
+    width: 120px;
+    height: 80px;
+    position: relative;
+    border-radius: 5px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+  
+  .folder-flap {
+    width: 100px;
+    height: 20px;
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    border-radius: 5px 5px 0 0;
+  }
+  
+  .folder-body {
+    width: 100%;
+    height: 60px;
+    position: absolute;
+    top: 10px;
+    border-radius: 0 0 5px 5px;
+  }
+  
+  .folder-body, .folder-flap {
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .filter-doc {
+    filter: invert(88%) sepia(92%) saturate(5026%) hue-rotate(35deg) brightness(105%) contrast(110%);
+  }
+
+  .svgIconStockage{
+    width: 40px;
+  }
