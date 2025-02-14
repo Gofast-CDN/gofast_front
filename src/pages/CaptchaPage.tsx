@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCaptcha } from "@/hooks/captcha/useCaptcha";
+import { config } from "@/lib/config";
 
 export default function CaptchaPage() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function CaptchaPage() {
 
     try {
       const response = await fetch(
-        "http://localhost:80/api/v1/captcha/verify-recaptcha",
+        `${config.BASE_URL}/captcha/verify-recaptcha`,
         {
           method: "POST",
           body: JSON.stringify({ token }),
