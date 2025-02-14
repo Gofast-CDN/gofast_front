@@ -27,9 +27,14 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
         description: data.message,
       });
 
-      // Invalidate and refetch assets
+      // Invalidate specific folder query
       await queryClient.invalidateQueries({
         queryKey: ["assets", containerId],
+      });
+
+      // Invalidate only recent files query
+      await queryClient.invalidateQueries({
+        queryKey: ["assets", "recent-files"],
       });
 
       options.onSuccess?.();
@@ -50,20 +55,17 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
     },
   });
 
-  const upload = async (file: File | string) => {
-    if (typeof file === "string") {
-      toast({
-        title: "URL Upload",
-        description: "URL upload not implemented yet",
-      });
-      return;
-    }
-
-    await uploadMutation.mutateAsync(file);
-  };
-
   return {
-    upload,
+    upload: async (file: File | string) => {
+      if (typeof file === "string") {
+        toast({
+          title: "URL Upload",
+          description: "URL upload not implemented yet",
+        });
+        return;
+      }
+      await uploadMutation.mutateAsync(file);
+    },
     isUploading: uploadMutation.isPending,
   };
 }
