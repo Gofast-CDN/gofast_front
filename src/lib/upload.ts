@@ -79,8 +79,7 @@ class UploadService {
 
   async uploadFile(
     file: File,
-    containerName: string,
-    userId: string,
+    containerId: string,
     options?: Partial<UploadOptions>
   ): Promise<UploadResponse> {
     const opts: Required<UploadOptions> = {
@@ -97,9 +96,8 @@ class UploadService {
 
     // Add file and metadata to FormData
     formData.append("file", file);
-    formData.append("containerName", containerName);
+    formData.append("containerId", containerId);
     formData.append("blobName", file.name);
-    formData.append("id", userId);
 
     try {
       const response = await this.uploadWithProgress(formData, opts);

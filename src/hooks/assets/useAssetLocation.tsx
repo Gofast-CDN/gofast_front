@@ -1,17 +1,19 @@
 import { useLocation, useParams } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 
 interface AssetLocation {
-  containerName: string;
+  containerId: string;
   isMySpace: boolean;
   currentFolderId: string;
 }
 
 export function useAssetLocation(): AssetLocation {
   const location = useLocation();
+  const { user } = useAuth();
   const { userId } = useParams<{ userId: string }>();
 
-  if (!userId) {
-    throw new Error("userId is required");
+  if (!userId || !user) {
+    throw new Error("User context is required");
   }
 
   const isMySpace = location.pathname.includes("my-space");
@@ -25,8 +27,8 @@ export function useAssetLocation(): AssetLocation {
       : "";
 
   return {
-    containerName:
-      isMySpace && currentFolderId ? currentFolderId : `${userId}-root`,
+    containerId:
+      isMySpace && currentFolderId ? currentFolderId : user.rootContainerID,
     isMySpace,
     currentFolderId,
   };
