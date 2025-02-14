@@ -32,7 +32,6 @@ export default function GridAssets({
 }: GridAssetsProps) {
   const folders = assets.filter((asset) => asset.assetType === "folder");
   const files = assets.filter((asset) => asset.assetType !== "folder");
-  console.log(files);
 
   return (
     <div className="space-y-8">
@@ -67,6 +66,11 @@ export default function GridAssets({
         </div>
       )}
 
+      {files.length === 0 && (
+        <div className="text-muted-foreground text-center col-span-full">
+          No files found
+        </div>
+      )}
       {files.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center gap-4">

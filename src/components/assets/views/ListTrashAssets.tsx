@@ -72,6 +72,13 @@ const ListTrashAssets = ({
           </TableRow>
         </TableHeader>
         <TableBody>
+          {paginatedAssets.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center">
+                No assets found
+              </TableCell>
+            </TableRow>
+          )}
           {paginatedAssets.map((asset) => (
             <TableRow key={asset.id}>
               <TableCell>
