@@ -29,7 +29,7 @@ import { NavUser } from "./NavUser";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { UploadFileModal } from "../assets/UploadFileModal";
-import { useFileUpload } from "@/hooks/useFileUpload";
+import { useFileUpload } from "@/hooks/assets/useFileUpload";
 
 interface MenuItem {
   title: string;

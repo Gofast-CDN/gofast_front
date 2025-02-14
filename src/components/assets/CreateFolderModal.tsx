@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FolderIcon } from "lucide-react";
-import { useCreateFolder } from "@/hooks/useCreateFolder";
+import { useCreateFolder } from "@/hooks/assets/useCreateFolder";
 
 const createFolderSchema = z.object({
   name: z

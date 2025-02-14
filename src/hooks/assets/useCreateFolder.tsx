@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { httpClient } from "@/lib/http-client";
-import { useAuth } from "./auth/AuthContext";
+import { useAuth } from "../auth/AuthContext";
 import { useAssetLocation } from "./useAssetLocation";
 import { toast } from "@/hooks/use-toast";
 
